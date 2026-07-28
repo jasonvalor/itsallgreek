@@ -77,6 +77,14 @@ web_modules/
 # Next.js build output
 .next
 out
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Misc
+.DS_Store
+*.pem
 
 # Nuxt.js build / generate output
 .nuxt
@@ -129,6 +137,7 @@ dist
 .pnpm-store
 
 # yarn v3
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
