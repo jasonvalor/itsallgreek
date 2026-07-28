@@ -30,6 +30,7 @@
   --container-md: 56rem;
   --container-lg: 72rem;
   --header-height: 4.5rem;
+  --z-header: 40;
 
   --shadow-surface: 0 1rem 3rem rgb(0 0 0 / 0.28);
   --shadow-blue: 0 0.75rem 2rem rgb(13 115 200 / 0.22);

@@ -4,7 +4,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 
 export default function Home() {
   return (
-    <main className="flex-1 py-[var(--space-section-y)]">
+    <main className="flex-1 pb-[var(--space-section-y)] pt-[calc(var(--space-section-y)*0.75)]">
       <Container className="space-y-12">
         <section className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="space-y-7">

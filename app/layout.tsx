@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
+import { SiteHeader } from "@/components/layout/site-header";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -12,7 +13,6 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
-
 
 export const metadata: Metadata = {
   title: "It's All Greek",
@@ -29,7 +29,10 @@ export default function RootLayout({
       lang="en"
       className={`${bebasNeue.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }
