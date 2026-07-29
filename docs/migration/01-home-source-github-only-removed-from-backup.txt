@@ -1,0 +1,6 @@
+﻿components\brand\site-logo.tsx
+components\layout\container.tsx
+components\layout\mobile-menu.tsx
+components\layout\site-header.tsx
+components\ui\section-heading.tsx
+design\01-home\dark-mobile-all-pages-approved.png

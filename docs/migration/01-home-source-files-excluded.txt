@@ -1,0 +1,13 @@
+﻿Excluded from the home local source backup:
+
+- .git/ (local repository metadata)
+- node_modules/ (installed dependencies)
+- .next/ (Next.js build output/cache)
+- dist/, build/, coverage/ (generated output if present)
+- cache folders such as .cache/, cache/, caches/
+- temporary folders such as tmp/ and temp/
+- logs (*.log)
+- environment files (.env, .env.*)
+- credential/certificate/key-like files (*.pem, *.pfx, *.p12, *.key, *.crt, *.cer)
+
+Generated-file count observed while scanning: 21753 excluded files, almost entirely node_modules/ and .next/.
