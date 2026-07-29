@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
+import { Icon } from "@/components/ui/icon";
 
 type ButtonVariant = "primary" | "secondary" | "quiet";
 
@@ -35,6 +36,10 @@ const variants = {
     "border border-border-subtle bg-surface text-text-primary hover:border-brand-blue hover:bg-surface-secondary active:bg-surface-secondary",
 };
 
+function isInternalHref(href: string) {
+  return href.startsWith("/");
+}
+
 export function Button({
   children,
   className = "",
@@ -45,13 +50,21 @@ export function Button({
   const content = (
     <>
       <span>{children}</span>
-      {showArrow ? <span aria-hidden="true">→</span> : null}
+      {showArrow ? <Icon className="h-4 w-4 shrink-0" name="arrowRight" /> : null}
     </>
   );
   const classes = `${baseClasses} ${variants[variant]} ${className}`;
 
   if ("href" in props) {
     const { href, ...linkProps } = props as LinkButtonProps;
+
+    if (!isInternalHref(href)) {
+      return (
+        <a className={classes} href={href} {...linkProps}>
+          {content}
+        </a>
+      );
+    }
 
     return (
       <Link className={classes} href={href} {...linkProps}>
