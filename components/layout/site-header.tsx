@@ -5,16 +5,9 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SiteLogo } from "@/components/brand/site-logo";
 import { Container } from "@/components/layout/container";
-import { MobileMenu, type NavigationItem } from "@/components/layout/mobile-menu";
+import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
-
-const navigationItems: NavigationItem[] = [
-  { href: "/", label: "Home" },
-  { href: "/menu", label: "Menu" },
-  { href: "/about", label: "Over ons" },
-  { href: "/contact", label: "Contact" },
-  { href: "/order", label: "Bestellen" },
-];
+import { navigationItems } from "@/lib/site";
 
 function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === href : pathname.startsWith(href);
@@ -53,17 +46,17 @@ export function SiteHeader() {
     <header
       className={`sticky top-0 z-40 transition-colors duration-200 ${
         isScrolled
-          ? "border-b border-border-subtle bg-background/92 shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] backdrop-blur-md"
-          : "bg-background/35"
+          ? "border-b border-border-subtle bg-background/94 shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] backdrop-blur-md"
+          : "border-b border-transparent bg-background/76 backdrop-blur-sm"
       }`}
     >
       <Container
         as="div"
         className="flex min-h-[var(--header-height)] items-center justify-between gap-5 py-3"
       >
-        <SiteLogo />
+        <SiteLogo priority />
 
-        <nav aria-label="Primary navigation" className="hidden items-center gap-2 md:flex">
+        <nav aria-label="Primaire navigatie" className="hidden items-center gap-2 md:flex">
           {primaryItems.map((item) => {
             const isActive = isActivePath(pathname, item.href);
 
@@ -71,9 +64,7 @@ export function SiteHeader() {
               <Link
                 aria-current={isActive ? "page" : undefined}
                 className={`inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-4 text-base font-semibold transition-colors ${
-                  isActive
-                    ? "text-brand-blue"
-                    : "text-text-secondary hover:text-text-primary"
+                  isActive ? "text-brand-blue" : "text-text-secondary hover:text-text-primary"
                 }`}
                 href={item.href}
                 key={item.href}
@@ -95,8 +86,8 @@ export function SiteHeader() {
           ref={menuButtonRef}
           aria-controls="mobile-navigation"
           aria-expanded={isMenuOpen}
-          aria-label="Open navigation menu"
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle text-text-primary transition-colors hover:bg-surface-secondary active:bg-surface md:hidden"
+          aria-label="Open menu"
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle text-text-primary transition-colors hover:bg-surface-secondary active:bg-surface md:hidden"
           onClick={() => setIsMenuOpen(true)}
           type="button"
         >
@@ -109,12 +100,7 @@ export function SiteHeader() {
       </Container>
 
       <div id="mobile-navigation">
-        <MobileMenu
-          activePath={pathname}
-          isOpen={isMenuOpen}
-          items={navigationItems}
-          onClose={closeMenu}
-        />
+        <MobileMenu activePath={pathname} isOpen={isMenuOpen} items={navigationItems} onClose={closeMenu} />
       </div>
     </header>
   );

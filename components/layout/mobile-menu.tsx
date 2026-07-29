@@ -13,7 +13,7 @@ export type NavigationItem = {
 type MobileMenuProps = {
   activePath: string;
   isOpen: boolean;
-  items: NavigationItem[];
+  items: readonly NavigationItem[];
   onClose: () => void;
 };
 
@@ -21,12 +21,7 @@ function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === href : pathname.startsWith(href);
 }
 
-export function MobileMenu({
-  activePath,
-  isOpen,
-  items,
-  onClose,
-}: MobileMenuProps) {
+export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -57,14 +52,18 @@ export function MobileMenu({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/98 px-[var(--space-page-x)] py-5 backdrop-blur-md md:hidden">
+    <div
+      aria-modal="true"
+      className="fixed inset-0 z-50 bg-background px-[var(--space-page-x)] py-5 md:hidden"
+      role="dialog"
+    >
       <div className="mx-auto flex min-h-full w-full max-w-[var(--container-sm)] flex-col">
         <div className="flex min-h-[var(--header-height)] items-center justify-between gap-4">
-          <SiteLogo />
+          <SiteLogo priority />
           <button
             ref={closeButtonRef}
-            aria-label="Close navigation menu"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle text-text-primary transition-colors hover:bg-surface-secondary active:bg-surface"
+            aria-label="Sluit menu"
+            className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle text-text-primary transition-colors hover:bg-surface-secondary active:bg-surface"
             onClick={onClose}
             type="button"
           >
@@ -75,7 +74,7 @@ export function MobileMenu({
           </button>
         </div>
 
-        <nav aria-label="Mobile navigation" className="flex flex-1 flex-col justify-center py-10">
+        <nav aria-label="Mobiele navigatie" className="flex flex-1 flex-col justify-center py-10">
           <ul className="grid gap-3">
             {items.map((item) => {
               const isActive = isActivePath(activePath, item.href);
@@ -92,10 +91,8 @@ export function MobileMenu({
                     href={item.href}
                     onClick={onClose}
                   >
-                    {item.label}
-                    {isActive ? (
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand-blue" />
-                    ) : null}
+                    <span>{item.label}</span>
+                    {isActive ? <span className="h-1.5 w-1.5 rounded-full bg-brand-blue" /> : null}
                   </Link>
                 </li>
               );

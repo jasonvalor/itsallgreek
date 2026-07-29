@@ -22,12 +22,11 @@ export function SectionHeading({
 
   return (
     <div className={`flex max-w-2xl flex-col gap-4 ${alignment} ${className}`}>
-      {eyebrow ? (
-        <p className="text-base font-semibold text-brand-blue">{eyebrow}</p>
-      ) : null}
-      <HeadingTag className="text-5xl text-text-primary sm:text-6xl">
+      {eyebrow ? <p className="text-base font-semibold text-brand-blue">{eyebrow}</p> : null}
+      <HeadingTag className="text-4xl text-text-primary sm:text-6xl lg:text-7xl">
         {heading}
       </HeadingTag>
+      <div className="h-0.5 w-12 rounded-full bg-brand-blue" />
       {description ? (
         <p className="max-w-xl text-base leading-8 text-text-secondary sm:text-lg">
           {description}
