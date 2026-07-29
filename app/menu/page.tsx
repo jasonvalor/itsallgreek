@@ -1,32 +1,53 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Container } from "@/components/layout/container";
+import { MenuItemCard } from "@/components/menu/menu-item-card";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { menuCategories } from "@/lib/site";
+import { PageIntro } from "@/components/ui/page-intro";
+import { menuCategories, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Menu",
-  description: "Bekijk de beschikbare It's All Greek menugegevens uit de herstelde bron.",
+  description:
+    "Bekijk een beschikbare selectie Griekse gerechten van It's All Greek in Nieuwerkerk aan den IJssel.",
+  openGraph: {
+    title: "Menu | It's All Greek",
+    description: "Bekijk een beschikbare selectie Griekse gerechten van It's All Greek.",
+  },
 };
 
 export default function MenuPage() {
   return (
-    <main className="page-shell flex-1">
+    <main className="page-shell flex-1" id="main-content">
       <Container className="space-y-10">
-        <SectionHeading
-          description="De volledige officiele menukaart is nog niet geimporteerd. Hieronder staat alleen wat in de bevestigde lokale brondata aanwezig was."
+        <PageIntro
+          body="Bekijk ons assortiment authentieke Griekse gerechten. Alle gerechten worden vers bereid. Wil je bestellen? Dat kan eenvoudig telefonisch."
           eyebrow="Menu"
           heading="Ons menu"
-          level={1}
         />
 
+        <nav aria-label="Menu categorieen">
+          <ul className="flex gap-2 overflow-x-auto pb-1">
+            {menuCategories.map((category) => (
+              <li className="shrink-0" key={category.id}>
+                <a
+                  className="inline-flex min-h-11 items-center rounded-[var(--radius-sm)] border border-brand-blue bg-brand-blue/10 px-4 text-base font-semibold text-brand-blue"
+                  href={`#${category.id}`}
+                >
+                  {category.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
         {menuCategories.map((category) => (
-          <section className="space-y-5" key={category.id}>
+          <section className="space-y-5 scroll-mt-28" id={category.id} key={category.id}>
             <div className="flex flex-col gap-3 border-b border-border-subtle pb-5 md:flex-row md:items-end md:justify-between">
-              <div>
+              <div className="max-w-2xl">
                 <h2 className="text-4xl text-text-primary">{category.label}</h2>
-                <p className="mt-2 max-w-2xl text-base leading-7 text-text-secondary">{category.note}</p>
+                {category.note ? (
+                  <p className="mt-2 text-base leading-7 text-text-secondary">{category.note}</p>
+                ) : null}
               </div>
               <Button href="/order" variant="secondary">
                 Bestellen
@@ -34,31 +55,22 @@ export default function MenuPage() {
             </div>
 
             <div className="grid gap-4">
-              {category.items.map((item) => (
-                <article className="surface-card grid gap-4 p-4 sm:grid-cols-[8rem_1fr] sm:items-center" key={item.name}>
-                  <div className="relative aspect-square overflow-hidden rounded-[var(--radius-sm)] bg-surface-secondary">
-                    <Image
-                      alt={item.image.alt}
-                      className="object-cover"
-                      fill
-                      sizes="(min-width: 640px) 128px, 100vw"
-                      src={item.image.src}
-                    />
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-start">
-                    <div>
-                      <h3 className="text-3xl text-text-primary">{item.name}</h3>
-                      <p className="mt-2 text-base leading-7 text-text-secondary">
-                        {item.description ?? "Beschrijving nog niet bevestigd."}
-                      </p>
-                    </div>
-                    <p className="text-lg font-semibold text-brand-blue">{item.price}</p>
-                  </div>
-                </article>
+              {category.items.map((item, index) => (
+                <MenuItemCard item={item} key={item.name} priority={index === 0} />
               ))}
             </div>
           </section>
         ))}
+
+        <section className="grid gap-5 border-t border-border-subtle pt-8 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <h2 className="text-4xl text-text-primary">Zin in Grieks?</h2>
+            <p className="mt-3 max-w-2xl text-base leading-8 text-text-secondary">
+              Bestel telefonisch bij {siteConfig.name} of neem contact op voor de actuele menukaart.
+            </p>
+          </div>
+          <Button href="/order">Bestel afhalen</Button>
+        </section>
       </Container>
     </main>
   );
