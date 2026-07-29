@@ -1,30 +1,32 @@
+import Image from "next/image";
 import Link from "next/link";
+
+const logoSize = {
+  width: 689,
+  height: 445,
+};
 
 type SiteLogoProps = {
   className?: string;
+  priority?: boolean;
 };
 
-export function SiteLogo({ className = "" }: SiteLogoProps) {
+export function SiteLogo({ className = "", priority = false }: SiteLogoProps) {
   return (
     <Link
       aria-label="It's All Greek home"
-      className={`inline-flex min-h-11 items-center rounded-[var(--radius-sm)] ${className}`}
+      className={`inline-flex min-h-11 shrink-0 items-center rounded-[var(--radius-sm)] ${className}`}
       href="/"
     >
-      <span className="grid leading-none">
-        <span className="text-[0.72rem] font-semibold tracking-[0.16em] text-text-primary">
-          IT&apos;S ALL
-        </span>
-        <span className="font-display text-3xl text-brand-blue sm:text-4xl">
-          GREEK
-        </span>
-        <span className="text-[0.58rem] font-semibold tracking-[0.24em] text-text-primary">
-          FOOD &amp; DRINKS
-        </span>
-        <span className="mt-1 text-[0.58rem] font-medium text-text-muted">
-          Temporary logo placeholder
-        </span>
-      </span>
+      <Image
+        alt="It's All Greek Food & Drinks"
+        className="h-12 w-auto sm:h-16"
+        height={logoSize.height}
+        priority={priority}
+        sizes="(min-width: 768px) 150px, 120px"
+        src="/images/logo.png"
+        width={logoSize.width}
+      />
     </Link>
   );
 }

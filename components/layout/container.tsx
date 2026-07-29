@@ -10,9 +10,9 @@ type ContainerProps<TElement extends ContainerElement = "div"> = {
 } & Omit<ComponentPropsWithoutRef<TElement>, "as" | "children" | "className">;
 
 const sizes = {
-  sm: "max-w-[var(--container-sm)]",
-  md: "max-w-[var(--container-md)]",
-  lg: "max-w-[var(--container-lg)]",
+  sm: "site-container-sm",
+  md: "site-container-md",
+  lg: "site-container-lg",
 };
 
 export function Container<TElement extends ContainerElement = "div">({
@@ -25,10 +25,7 @@ export function Container<TElement extends ContainerElement = "div">({
   const Component = (as ?? "div") as ElementType;
 
   return (
-    <Component
-      className={`mx-auto w-full px-[var(--space-page-x)] ${sizes[size]} ${className}`}
-      {...props}
-    >
+    <Component className={`min-w-0 ${sizes[size]} ${className}`} {...props}>
       {children}
     </Component>
   );
