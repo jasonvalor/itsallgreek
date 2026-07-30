@@ -8,10 +8,11 @@ const logoSize = {
 
 type SiteLogoProps = {
   className?: string;
+  imageClassName?: string;
   priority?: boolean;
 };
 
-export function SiteLogo({ className = "", priority = false }: SiteLogoProps) {
+export function SiteLogo({ className = "", imageClassName = "", priority = false }: SiteLogoProps) {
   return (
     <Link
       aria-label="It's All Greek homepagina"
@@ -20,11 +21,11 @@ export function SiteLogo({ className = "", priority = false }: SiteLogoProps) {
     >
       <Image
         alt="It's All Greek Food & Drinks"
-        className="h-12 w-auto sm:h-16"
+        className={`h-[3.4rem] w-auto md:h-16 ${imageClassName}`}
         height={logoSize.height}
         priority={priority}
-        sizes="(min-width: 768px) 150px, 120px"
-        src="/images/logo.png"
+        sizes="(min-width: 768px) 150px, 92px"
+        src="/images/logo-dark-transparent.png"
         width={logoSize.width}
       />
     </Link>

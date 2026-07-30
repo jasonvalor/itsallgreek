@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { FeatureCard } from "@/components/ui/feature-card";
+import { MobileValueIcons, type MobileValueIcon } from "@/components/ui/mobile-value-icons";
 import { PageIntro } from "@/components/ui/page-intro";
 import { brandValues, siteConfig } from "@/lib/site";
 
@@ -16,9 +17,53 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const mobileValues: readonly MobileValueIcon[] = [
+    { icon: "temple", label: "Authentieke recepten" },
+    { icon: "leaf", label: "Verse ingredienten" },
+    { icon: "heart", label: "Griekse gastvrijheid" },
+  ];
+
   return (
-    <main className="page-shell flex-1" id="main-content">
-      <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+    <main className="flex-1" id="main-content">
+      <section className="mobile-approved-page flex flex-col md:hidden" data-testid="mobile-about-page">
+        <div className="space-y-4">
+          <h1 className="mobile-title">OVER ONS</h1>
+          <div className="mobile-accent-line" />
+        </div>
+
+        <div className="relative mt-6 aspect-[1.38] overflow-hidden rounded-[0.6rem] border border-border-subtle bg-surface-secondary">
+          <Image
+            alt="Zonnig Grieks terras met witte muren en blauwe details"
+            className="object-cover object-[58%_42%]"
+            fill
+            priority
+            sizes="(max-width: 430px) 100vw, 430px"
+            src="/images/restaurant-day.png"
+          />
+        </div>
+
+        <div className="mt-5 space-y-4">
+          <p className="text-[1.03rem] font-bold leading-7 text-text-primary">
+            Bij {siteConfig.name} draait alles om gastvrijheid, kwaliteit en de smaken van Griekenland.
+          </p>
+          <p className="text-[0.9rem] leading-7 text-text-secondary">
+            Iedere gast moet zich welkom voelen. Of je nu langskomt om te eten, iets afhaalt of laat bezorgen.
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <MobileValueIcons items={mobileValues} />
+        </div>
+
+        <div className="mt-auto pt-6">
+          <Button className="w-full border-brand-blue/95 bg-transparent" href="/menu" variant="secondary">
+            Bekijk menu
+          </Button>
+        </div>
+      </section>
+
+      <div className="hidden md:block page-shell">
+        <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div className="space-y-7">
           <PageIntro
             body={`Bij ${siteConfig.name} draait alles om gastvrijheid, kwaliteit en de smaken van Griekenland.`}
@@ -54,10 +99,10 @@ export default function AboutPage() {
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgb(15_15_16_/_0.2))]" />
         </div>
-      </Container>
+        </Container>
 
-      <section className="mt-16 border-y border-border-subtle bg-surface py-[var(--space-section-y)]">
-        <Container className="space-y-10">
+        <section className="mt-16 border-y border-border-subtle bg-surface py-[var(--space-section-y)]">
+          <Container className="space-y-10">
           <div className="max-w-2xl">
             <h2 className="text-5xl text-text-primary sm:text-6xl">Waar we voor staan</h2>
             <div className="mt-4 h-0.5 w-12 rounded-full bg-brand-blue" />
@@ -67,8 +112,9 @@ export default function AboutPage() {
               <FeatureCard compact feature={feature} key={feature.title} />
             ))}
           </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
+      </div>
     </main>
   );
 }

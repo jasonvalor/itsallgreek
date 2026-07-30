@@ -1,6 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const baseURL = "http://127.0.0.1:3000";
+const startCommand =
+  process.platform === "win32"
+    ? "node_modules\\.bin\\next.cmd start --port 3000"
+    : "node_modules/.bin/next start --port 3000";
 
 export default defineConfig({
   testDir: "./tests/smoke",
@@ -35,7 +39,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run start -- --port 3000",
+    command: startCommand,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
     url: baseURL,

@@ -118,7 +118,6 @@ export function Icon({ className = "", name, ...props }: IconProps) {
       className={className}
       fill="none"
       focusable="false"
-      role="img"
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
