@@ -1,11 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const expectedRoutes = [
-  { path: "/", heading: /Even weg\./i },
-  { path: "/menu", heading: /Ons menu/i },
-  { path: "/about", heading: /Over It's All Greek/i },
-  { path: "/contact", heading: /We helpen je graag/i },
-  { path: "/order", heading: /Bestel vers Grieks/i },
+  { path: "/", desktopHeading: /Even weg\./i, mobileHeading: /Authentiek/i },
+  { path: "/menu", desktopHeading: /Ons menu/i, mobileHeading: /Ons menu/i },
+  { path: "/about", desktopHeading: /Over It's All Greek/i, mobileHeading: /Over ons/i },
+  { path: "/contact", desktopHeading: /We helpen je graag/i, mobileHeading: /Contact/i },
+  { path: "/order", desktopHeading: /Bestel vers Grieks/i, mobileHeading: /Bestellen/i },
 ] as const;
 
 async function watchPageHealth(page: Page, options: { allowExpectedNavigation404?: boolean } = {}) {
@@ -76,16 +76,42 @@ async function expectCriticalImagesLoaded(page: Page) {
   expect(brokenImages, "critical rendered images should load").toEqual([]);
 }
 
+async function expectCompactMobileHeader(page: Page) {
+  const header = page.getByRole("banner");
+  const headerBox = await header.boundingBox();
+
+  expect(headerBox?.height, "mobile header height").toBeGreaterThanOrEqual(64);
+  expect(headerBox?.height, "mobile header height").toBeLessThanOrEqual(76);
+
+  const logo = header.getByAltText("It's All Greek Food & Drinks");
+  await expect(logo).toHaveAttribute("src", /logo-dark-transparent/);
+
+  const logoParentBackground = await logo.evaluate((image) => {
+    const parent = image.closest("a");
+    return parent ? getComputedStyle(parent).backgroundColor : "";
+  });
+  expect(logoParentBackground, "logo parent should not be a white tile").not.toBe("rgb(255, 255, 255)");
+
+  const menuButton = page.getByRole("button", { name: /Open menu/i });
+  const menuButtonBox = await menuButton.boundingBox();
+  expect(menuButtonBox?.width, "hamburger hit area should stay compact").toBeLessThanOrEqual(48);
+  expect(menuButtonBox?.height, "hamburger hit area should stay compact").toBeLessThanOrEqual(48);
+}
+
 test.describe("route smoke", () => {
   for (const route of expectedRoutes) {
-    test(`${route.path} renders with healthy document state`, async ({ page }) => {
+    test(`${route.path} renders with healthy document state`, async ({ page, isMobile }) => {
       const health = await watchPageHealth(page);
       const response = await page.goto(route.path);
 
       expect(response?.status(), `${route.path} status`).toBe(200);
-      await expect(page.getByRole("heading", { level: 1, name: route.heading })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: isMobile ? route.mobileHeading : route.desktopHeading })).toBeVisible();
       await expect(page.getByRole("banner")).toBeVisible();
       await expect(page.getByRole("contentinfo")).toBeVisible();
+
+      if (isMobile) {
+        await expectCompactMobileHeader(page);
+      }
 
       await expectCriticalImagesLoaded(page);
       await expectNoHorizontalOverflow(page);
@@ -102,6 +128,53 @@ test.describe("route smoke", () => {
     await expect(page.getByRole("link", { name: /Terug naar home/i })).toBeVisible();
 
     await expectCriticalImagesLoaded(page);
+    await expectNoHorizontalOverflow(page);
+    health.assertHealthy();
+  });
+});
+
+test.describe("mobile approved design structure", () => {
+  test("homepage uses contained mobile food composition", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "mobile structure assertions only apply below the desktop breakpoint");
+
+    const health = await watchPageHealth(page);
+    await page.goto("/");
+
+    const mobileHome = page.getByTestId("mobile-home");
+    await expect(mobileHome.getByRole("heading", { level: 1, name: /Authentiek/i })).toBeVisible();
+    await expect(mobileHome.getByRole("link", { name: /Bestel nu/i })).toBeVisible();
+    await expect(mobileHome.getByRole("heading", { name: /Onze specialiteiten/i })).toBeVisible();
+
+    const mobileImageSources = await mobileHome.locator("img").evaluateAll((images) =>
+      images.map((image) => (image as HTMLImageElement).currentSrc || (image as HTMLImageElement).src),
+    );
+    expect(
+      mobileImageSources.some((src) => src.includes("restaurant-day.png")),
+      "mobile homepage should not use the restaurant photo hero",
+    ).toBe(false);
+
+    await expectNoHorizontalOverflow(page);
+    health.assertHealthy();
+  });
+
+  test("mobile inner pages expose expected bottom actions and menu rows", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "mobile structure assertions only apply below the desktop breakpoint");
+
+    const health = await watchPageHealth(page);
+
+    await page.goto("/menu");
+    await expect(page.getByTestId("mobile-menu-page").getByRole("heading", { name: /Gyros Pita/i })).toBeVisible();
+    await expect(page.getByTestId("mobile-menu-page").getByRole("link", { name: /Bestel nu/i })).toBeVisible();
+
+    await page.goto("/about");
+    await expect(page.getByTestId("mobile-about-page").getByRole("link", { name: /Bekijk menu/i })).toBeVisible();
+
+    await page.goto("/contact");
+    await expect(page.getByTestId("mobile-contact-page").getByRole("link", { name: /Neem contact op/i })).toBeVisible();
+
+    await page.goto("/order");
+    await expect(page.getByTestId("mobile-order-page").getByRole("link", { name: /Bel restaurant/i })).toBeVisible();
+
     await expectNoHorizontalOverflow(page);
     health.assertHealthy();
   });
@@ -149,6 +222,10 @@ test.describe("navigation smoke", () => {
     await expect(menuButton).toHaveAttribute("aria-expanded", "true");
     await expect(page.getByRole("dialog", { name: /Mobiel menu/i })).toBeVisible();
     await expect(page.getByRole("button", { name: /Sluit menu/i })).toBeFocused();
+    await expect(page.getByRole("dialog", { name: /Mobiel menu/i }).getByRole("link", { name: /^Home$/i })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
 
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: /Mobiel menu/i })).toBeHidden();
