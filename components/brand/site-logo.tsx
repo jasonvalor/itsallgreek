@@ -14,7 +14,7 @@ type SiteLogoProps = {
 export function SiteLogo({ className = "", priority = false }: SiteLogoProps) {
   return (
     <Link
-      aria-label="It's All Greek home"
+      aria-label="It's All Greek homepagina"
       className={`inline-flex min-h-11 shrink-0 items-center rounded-[var(--radius-sm)] ${className}`}
       href="/"
     >

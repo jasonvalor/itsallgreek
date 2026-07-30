@@ -4,11 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { SiteLogo } from "@/components/brand/site-logo";
 import { Button } from "@/components/ui/button";
-
-export type NavigationItem = {
-  href: string;
-  label: string;
-};
+import { Icon } from "@/components/ui/icon";
+import type { NavigationItem } from "@/types/site";
 
 type MobileMenuProps = {
   activePath: string;
@@ -23,6 +20,7 @@ function isActivePath(pathname: string, href: string) {
 
 export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -31,11 +29,42 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
 
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
+
+    window.requestAnimationFrame(() => {
+      closeButtonRef.current?.focus();
+    });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const focusableElements = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+      );
+      const focusable = Array.from(focusableElements ?? []).filter(
+        (element) => !element.hasAttribute("disabled") && element.getAttribute("aria-hidden") !== "true",
+      );
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
@@ -53,8 +82,11 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
 
   return (
     <div
+      ref={dialogRef}
+      aria-label="Mobiel menu"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-background px-[var(--space-page-x)] py-5 md:hidden"
+      className="fixed inset-0 z-50 bg-[var(--brand-mobile-menu-background)] px-[var(--space-page-x)] py-5 lg:hidden"
+      id="mobile-navigation-dialog"
       role="dialog"
     >
       <div className="mx-auto flex min-h-full w-full max-w-[var(--container-sm)] flex-col">
@@ -67,10 +99,7 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
             onClick={onClose}
             type="button"
           >
-            <span aria-hidden="true" className="relative h-5 w-5">
-              <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 rotate-45 rounded-full bg-current" />
-              <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 -rotate-45 rounded-full bg-current" />
-            </span>
+            <Icon className="h-6 w-6" name="close" />
           </button>
         </div>
 

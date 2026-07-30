@@ -7,6 +7,7 @@ import { SiteLogo } from "@/components/brand/site-logo";
 import { Container } from "@/components/layout/container";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 import { navigationItems } from "@/lib/site";
 
 function isActivePath(pathname: string, href: string) {
@@ -46,8 +47,8 @@ export function SiteHeader() {
     <header
       className={`sticky top-0 z-40 transition-colors duration-200 ${
         isScrolled
-          ? "border-b border-border-subtle bg-background/94 shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] backdrop-blur-md"
-          : "border-b border-transparent bg-background/76 backdrop-blur-sm"
+          ? "border-b border-border-subtle bg-[var(--brand-header-background)] shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] backdrop-blur-md"
+          : "border-b border-transparent bg-background/82 backdrop-blur-sm"
       }`}
     >
       <Container
@@ -56,7 +57,7 @@ export function SiteHeader() {
       >
         <SiteLogo priority />
 
-        <nav aria-label="Primaire navigatie" className="hidden items-center gap-2 md:flex">
+        <nav aria-label="Primaire navigatie" className="hidden items-center gap-2 lg:flex">
           {primaryItems.map((item) => {
             const isActive = isActivePath(pathname, item.href);
 
@@ -84,22 +85,18 @@ export function SiteHeader() {
 
         <button
           ref={menuButtonRef}
-          aria-controls="mobile-navigation"
+          aria-controls="mobile-navigation-dialog"
           aria-expanded={isMenuOpen}
           aria-label="Open menu"
-          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle text-text-primary transition-colors hover:bg-surface-secondary active:bg-surface md:hidden"
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-brand-blue/70 bg-surface/90 text-text-primary shadow-[0_0.75rem_1.5rem_rgb(0_0_0_/_0.28)] transition-colors hover:bg-surface-secondary active:bg-surface lg:hidden"
           onClick={() => setIsMenuOpen(true)}
           type="button"
         >
-          <span aria-hidden="true" className="grid gap-1.5">
-            <span className="h-0.5 w-5 rounded-full bg-current" />
-            <span className="h-0.5 w-5 rounded-full bg-current" />
-            <span className="h-0.5 w-5 rounded-full bg-current" />
-          </span>
+          <Icon className="h-6 w-6" name="menu" />
         </button>
       </Container>
 
-      <div id="mobile-navigation">
+      <div>
         <MobileMenu activePath={pathname} isOpen={isMenuOpen} items={navigationItems} onClose={closeMenu} />
       </div>
     </header>
