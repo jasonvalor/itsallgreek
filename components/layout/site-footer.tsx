@@ -64,7 +64,7 @@ export function SiteFooter() {
 
       <Container className="mt-10 border-t border-border-subtle pt-6">
         <p className="text-sm leading-6 text-text-muted">
-          © {currentYear} {siteConfig.name}. Alle rechten voorbehouden.
+          © {currentYear} {"It's All Greek • Authentic Greek Street Food"}. Alle rechten voorbehouden.
         </p>
       </Container>
     </footer>
