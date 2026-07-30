@@ -10,8 +10,34 @@ export function SiteFooter() {
   const footerNavigation = navigationItems.filter((item) => item.href !== "/");
 
   return (
-    <footer className="border-t border-border-subtle bg-background py-12">
-      <Container className="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1fr] lg:gap-14">
+    <footer className="border-t border-border-subtle bg-background py-6 md:py-12">
+      <Container className="space-y-5 md:hidden">
+        <div className="flex items-center justify-between gap-4">
+          <SiteLogo imageClassName="h-12" />
+          <Button className="min-h-11 px-3 text-[0.72rem]" href="/order">
+            Bestellen
+          </Button>
+        </div>
+        <p className="text-[0.8rem] leading-6 text-text-secondary">
+          Authentieke Griekse gerechten in het hart van {siteConfig.location}.
+        </p>
+        <nav aria-label="Footer navigatie mobiel">
+          <ul className="flex flex-wrap gap-x-4 gap-y-2">
+            {footerNavigation.map((item) => (
+              <li key={item.href}>
+                <Link className="text-[0.78rem] font-semibold text-text-muted hover:text-text-primary" href={item.href}>
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <p className="border-t border-border-subtle pt-4 text-[0.72rem] leading-5 text-text-muted">
+          Copyright {currentYear} {"It's All Greek Food & Drinks"}.
+        </p>
+      </Container>
+
+      <Container className="hidden gap-10 md:grid md:grid-cols-[1.2fr_0.7fr_1fr] lg:gap-14">
         <div className="space-y-5">
           <SiteLogo />
           <p className="max-w-sm text-base leading-8 text-text-secondary">
@@ -62,9 +88,9 @@ export function SiteFooter() {
         </div>
       </Container>
 
-      <Container className="mt-10 border-t border-border-subtle pt-6">
+      <Container className="mt-10 hidden border-t border-border-subtle pt-6 md:block">
         <p className="text-sm leading-6 text-text-muted">
-          © {currentYear} {"It's All Greek • Authentic Greek Street Food"}. Alle rechten voorbehouden.
+          Copyright {currentYear} {"It's All Greek Food & Drinks"}. Alle rechten voorbehouden.
         </p>
       </Container>
     </footer>

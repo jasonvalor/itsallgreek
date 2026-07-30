@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { SiteLogo } from "@/components/brand/site-logo";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import type { NavigationItem } from "@/types/site";
+import type { IconName, NavigationItem } from "@/types/site";
 
 type MobileMenuProps = {
   activePath: string;
@@ -17,6 +16,14 @@ type MobileMenuProps = {
 function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === href : pathname.startsWith(href);
 }
+
+const navigationIcons: Record<NavigationItem["href"], IconName> = {
+  "/": "home",
+  "/menu": "plate",
+  "/about": "temple",
+  "/contact": "phone",
+  "/order": "bag",
+};
 
 export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -85,17 +92,17 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
       ref={dialogRef}
       aria-label="Mobiel menu"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-[var(--brand-mobile-menu-background)] px-[var(--space-page-x)] py-5 lg:hidden"
+      className="fixed inset-0 z-50 bg-[var(--brand-mobile-menu-background)] px-[var(--mobile-page-x)] py-[calc(1rem+env(safe-area-inset-top))] lg:hidden"
       id="mobile-navigation-dialog"
       role="dialog"
     >
-      <div className="mx-auto flex min-h-full w-full max-w-[var(--container-sm)] flex-col">
-        <div className="flex min-h-[var(--header-height)] items-center justify-between gap-4">
+      <div className="mx-auto flex min-h-full w-full max-w-[28rem] flex-col">
+        <div className="flex min-h-[4rem] items-center justify-between gap-4">
           <SiteLogo priority />
           <button
             ref={closeButtonRef}
             aria-label="Sluit menu"
-            className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle text-text-primary transition-colors hover:bg-surface-secondary active:bg-surface"
+            className="-mr-2 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-brand-blue transition-colors hover:text-brand-blue-hover active:text-brand-blue-active"
             onClick={onClose}
             type="button"
           >
@@ -103,8 +110,8 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
           </button>
         </div>
 
-        <nav aria-label="Mobiele navigatie" className="flex flex-1 flex-col justify-center py-10">
-          <ul className="grid gap-3">
+        <nav aria-label="Mobiele navigatie" className="pt-12">
+          <ul className="grid gap-2">
             {items.map((item) => {
               const isActive = isActivePath(activePath, item.href);
 
@@ -112,26 +119,25 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
                 <li key={item.href}>
                   <Link
                     aria-current={isActive ? "page" : undefined}
-                    className={`flex min-h-14 items-center justify-between rounded-[var(--radius-md)] border px-5 text-3xl font-display transition-colors ${
-                      isActive
-                        ? "border-brand-blue bg-brand-blue/10 text-brand-blue"
-                        : "border-border-subtle bg-surface text-text-primary hover:border-brand-blue hover:bg-surface-secondary"
+                    className={`flex min-h-11 items-center gap-4 rounded-[var(--radius-sm)] px-1 text-[1rem] font-semibold transition-colors ${
+                      isActive ? "text-brand-blue" : "text-text-primary hover:text-brand-blue"
                     }`}
                     href={item.href}
                     onClick={onClose}
                   >
-                    <span>{item.label}</span>
-                    {isActive ? <span className="h-1.5 w-1.5 rounded-full bg-brand-blue" /> : null}
+                    <Icon
+                      className={`h-[1.15rem] w-[1.15rem] shrink-0 ${
+                        isActive ? "text-brand-blue" : "text-text-primary"
+                      }`}
+                      name={navigationIcons[item.href]}
+                    />
+                    <span className={isActive ? "text-brand-blue" : "text-text-primary"}>{item.label}</span>
                   </Link>
                 </li>
               );
             })}
           </ul>
         </nav>
-
-        <Button className="mb-5 w-full" href="/order" onClick={onClose}>
-          Bestellen
-        </Button>
       </div>
     </div>
   );

@@ -47,13 +47,13 @@ export function SiteHeader() {
     <header
       className={`sticky top-0 z-40 transition-colors duration-200 ${
         isScrolled
-          ? "border-b border-border-subtle bg-[var(--brand-header-background)] shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] backdrop-blur-md"
-          : "border-b border-transparent bg-background/82 backdrop-blur-sm"
+          ? "bg-[var(--brand-header-background)] md:border-b md:border-border-subtle md:shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] md:backdrop-blur-md"
+          : "bg-background/96 md:border-b md:border-transparent md:backdrop-blur-sm"
       }`}
     >
       <Container
         as="div"
-        className="flex min-h-[var(--header-height)] items-center justify-between gap-5 py-3"
+        className="flex min-h-[var(--header-height)] items-center justify-between gap-5 py-2 md:py-3"
       >
         <SiteLogo priority />
 
@@ -88,11 +88,11 @@ export function SiteHeader() {
           aria-controls="mobile-navigation-dialog"
           aria-expanded={isMenuOpen}
           aria-label="Open menu"
-          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-brand-blue/70 bg-surface/90 text-text-primary shadow-[0_0.75rem_1.5rem_rgb(0_0_0_/_0.28)] transition-colors hover:bg-surface-secondary active:bg-surface lg:hidden"
+          className="-mr-2 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-transparent bg-transparent text-text-primary transition-colors hover:text-brand-blue active:text-brand-blue lg:hidden"
           onClick={() => setIsMenuOpen(true)}
           type="button"
         >
-          <Icon className="h-6 w-6" name="menu" />
+          <Icon className="h-7 w-7" name="menu" />
         </button>
       </Container>
 
