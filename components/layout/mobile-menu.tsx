@@ -92,41 +92,41 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
       ref={dialogRef}
       aria-label="Mobiel menu"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-[var(--brand-mobile-menu-background)] px-[var(--mobile-page-x)] pb-6 pt-[calc(0.7rem+env(safe-area-inset-top))] lg:hidden"
+      className="fixed inset-0 z-50 bg-[var(--brand-mobile-menu-background)] px-[var(--mobile-page-x)] pb-6 pt-[calc(0.2rem+env(safe-area-inset-top))] lg:hidden"
       id="mobile-navigation-dialog"
       role="dialog"
     >
       <div className="mx-auto flex min-h-full w-full max-w-[28rem] flex-col">
         <div className="flex min-h-[3.5rem] items-center justify-between gap-4">
-          <SiteLogo imageClassName="h-[2.9rem] md:h-[2.9rem]" priority />
+          <SiteLogo imageClassName="h-[2.65rem] md:h-[2.65rem]" priority />
           <button
             ref={closeButtonRef}
             aria-label="Sluit menu"
-            className="-mr-2 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-brand-blue transition-colors hover:text-brand-blue-hover active:text-brand-blue-active"
+            className="-mr-2 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center border-0 bg-transparent p-0 text-brand-blue transition-colors hover:text-brand-blue-hover focus-visible:outline-none active:text-brand-blue-active"
             onClick={onClose}
             type="button"
           >
-            <Icon className="h-[1.4rem] w-[1.4rem]" name="close" />
+            <Icon className="h-[1.375rem] w-[1.375rem]" name="close" />
           </button>
         </div>
 
-        <nav aria-label="Mobiele navigatie" className="pt-9">
-          <ul className="grid gap-2">
-            {items.map((item) => {
+        <nav aria-label="Mobiele navigatie" className="pt-5">
+          <ul className="grid">
+            {items.map((item, index) => {
               const isActive = isActivePath(activePath, item.href);
 
               return (
-                <li key={item.href}>
+                <li className={index === 0 ? "" : index >= 3 ? "mt-1" : "mt-2"} key={item.href}>
                   <Link
                     aria-current={isActive ? "page" : undefined}
-                    className={`flex min-h-11 items-center gap-[1.1rem] rounded-[var(--radius-sm)] px-1 text-[0.96rem] font-semibold transition-colors ${
+                    className={`flex min-h-11 items-center gap-[1.05rem] rounded-[var(--radius-sm)] px-1 text-[0.875rem] font-semibold transition-colors ${
                       isActive ? "text-brand-blue" : "text-text-primary hover:text-brand-blue"
                     }`}
                     href={item.href}
                     onClick={onClose}
                   >
                     <Icon
-                      className={`h-[1.05rem] w-[1.05rem] shrink-0 ${
+                      className={`h-[0.925rem] w-[0.925rem] shrink-0 ${
                         isActive ? "text-brand-blue" : "text-text-primary"
                       }`}
                       name={navigationIcons[item.href]}
