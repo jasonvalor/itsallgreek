@@ -204,10 +204,10 @@ async function expectCompactMobileMenu(page: Page) {
     "rgba(0, 0, 0, 0)",
   );
   expect(closeChrome.borderTopWidth, "close control should not show a visible border").toBe("0px");
-  expect(closeChrome.iconWidth, "close visible icon width").toBeGreaterThanOrEqual(20);
-  expect(closeChrome.iconWidth, "close visible icon width").toBeLessThanOrEqual(26);
-  expect(closeChrome.iconHeight, "close visible icon height").toBeGreaterThanOrEqual(20);
-  expect(closeChrome.iconHeight, "close visible icon height").toBeLessThanOrEqual(26);
+  expect(closeChrome.iconWidth, "close visible icon width").toBeGreaterThanOrEqual(21);
+  expect(closeChrome.iconWidth, "close visible icon width").toBeLessThanOrEqual(25);
+  expect(closeChrome.iconHeight, "close visible icon height").toBeGreaterThanOrEqual(21);
+  expect(closeChrome.iconHeight, "close visible icon height").toBeLessThanOrEqual(25);
 
   const firstLink = dialog.getByRole("link", { name: /^Home$/i });
   const firstLinkBox = await firstLink.boundingBox();
@@ -216,14 +216,23 @@ async function expectCompactMobileMenu(page: Page) {
     (viewport?.height ?? 844) / 2,
   );
 
-  const firstIconSize = await firstLink.locator("svg").evaluate((icon) => {
-    const rect = icon.getBoundingClientRect();
-    return { height: rect.height, width: rect.width };
+  const firstRowStyle = await firstLink.evaluate((link) => {
+    const icon = link.querySelector("svg");
+    const label = link.querySelector("span");
+    const iconRect = icon?.getBoundingClientRect();
+
+    return {
+      iconHeight: iconRect?.height ?? 0,
+      iconWidth: iconRect?.width ?? 0,
+      labelFontSize: label ? Number.parseFloat(getComputedStyle(label).fontSize) : 0,
+    };
   });
-  expect(firstIconSize.width, "mobile nav icon width").toBeGreaterThanOrEqual(16);
-  expect(firstIconSize.width, "mobile nav icon width").toBeLessThanOrEqual(22);
-  expect(firstIconSize.height, "mobile nav icon height").toBeGreaterThanOrEqual(16);
-  expect(firstIconSize.height, "mobile nav icon height").toBeLessThanOrEqual(22);
+  expect(firstRowStyle.iconWidth, "mobile nav icon width").toBeGreaterThanOrEqual(14);
+  expect(firstRowStyle.iconWidth, "mobile nav icon width").toBeLessThanOrEqual(18);
+  expect(firstRowStyle.iconHeight, "mobile nav icon height").toBeGreaterThanOrEqual(14);
+  expect(firstRowStyle.iconHeight, "mobile nav icon height").toBeLessThanOrEqual(18);
+  expect(firstRowStyle.labelFontSize, "mobile nav label size").toBeGreaterThanOrEqual(13);
+  expect(firstRowStyle.labelFontSize, "mobile nav label size").toBeLessThanOrEqual(15);
 }
 
 test.describe("route smoke", () => {
