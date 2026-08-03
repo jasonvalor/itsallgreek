@@ -31,38 +31,44 @@ export default function Home() {
       <section className="relative isolate overflow-hidden md:hidden" data-testid="mobile-home">
         <div className="mobile-approved-page flex min-h-[calc(100svh-var(--header-height))] flex-col">
           <div className="relative flex flex-1 flex-col">
-            <div className="relative z-10 max-w-[15.5rem] pt-5">
-              <h1 className="text-[clamp(2.75rem,12.2vw,3.35rem)] leading-[0.91] text-text-primary">
+            <div className="relative z-10 max-w-[15rem] pt-4">
+              <h1 className="max-w-[13.8rem] text-[clamp(2rem,8.9vw,2.28rem)] leading-[0.92] text-text-primary">
                 <span className="block">AUTHENTIEK</span>
                 <span className="block text-brand-blue">GRIEKS</span>
                 <span className="block">FOOD &amp; DRINKS</span>
               </h1>
-              <p className="mt-4 text-[0.92rem] leading-7 text-text-primary">
+              <p className="mt-3 max-w-[15rem] text-[0.88rem] leading-[1.45] text-text-primary">
                 Pure smaken. Verse ingredienten.
                 <br />
                 Met liefde bereid.
               </p>
-              <Button className="mt-5 min-h-11 px-4 text-[0.78rem]" href="/order">
+              <Button className="mt-4 min-h-[2.625rem] w-[9.5rem] gap-2 px-3 py-0 text-[0.72rem]" href="/order">
                 Bestel nu
               </Button>
             </div>
 
-            <div className="absolute right-[-0.7rem] top-[9.1rem] h-[12.8rem] w-[5.8rem] overflow-hidden rounded-[0.55rem] border border-border-subtle bg-surface-secondary shadow-[0_1rem_2rem_rgb(0_0_0_/_0.35)] min-[400px]:right-0 min-[400px]:w-[6.6rem]">
+            <div
+              className="absolute right-0 top-[8rem] h-[9.8rem] w-[4.65rem] overflow-hidden rounded-[0.5rem] border border-border-subtle bg-surface-secondary shadow-[0_0.85rem_1.8rem_rgb(0_0_0_/_0.32)] min-[400px]:top-[8.2rem] min-[400px]:h-[10.35rem] min-[400px]:w-[5.05rem]"
+              data-testid="mobile-hero-detail-image"
+            >
               <Image
-                alt="Detail van Griekse gerechten en blauwe glazen"
-                className="object-cover object-[78%_12%]"
+                alt="Detail van een blauw Grieks drinkglas"
+                className="object-cover"
                 fill
                 priority
-                sizes="110px"
-                src="/images/food-collage.png"
+                sizes="86px"
+                src="/images/mobile-drink-detail.png"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(9_10_11_/_0.1),rgb(9_10_11_/_0.48))]" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(9_10_11_/_0.05),rgb(9_10_11_/_0.36))]" />
             </div>
 
-            <div className="relative mt-9 h-[14.2rem] overflow-hidden rounded-[0.6rem] border border-border-subtle bg-surface-secondary min-[375px]:h-[15.6rem] min-[400px]:h-[16.6rem]">
+            <div
+              className="relative mt-14 h-[13.4rem] overflow-hidden rounded-[0.55rem] border border-border-subtle bg-surface-secondary min-[375px]:h-[13.95rem] min-[400px]:h-[14.55rem]"
+              data-testid="mobile-hero-main-image"
+            >
               <Image
                 alt="Griekse salade met feta, tomaat, komkommer en olijven"
-                className="object-cover object-[50%_48%]"
+                className="object-cover object-[50%_46%]"
                 fill
                 priority
                 sizes="(max-width: 430px) 100vw, 430px"

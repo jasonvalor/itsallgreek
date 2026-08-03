@@ -92,13 +92,13 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
       ref={dialogRef}
       aria-label="Mobiel menu"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-[var(--brand-mobile-menu-background)] px-[var(--mobile-page-x)] py-[calc(1rem+env(safe-area-inset-top))] lg:hidden"
+      className="fixed inset-0 z-50 bg-[var(--brand-mobile-menu-background)] px-[var(--mobile-page-x)] pb-6 pt-[calc(0.7rem+env(safe-area-inset-top))] lg:hidden"
       id="mobile-navigation-dialog"
       role="dialog"
     >
       <div className="mx-auto flex min-h-full w-full max-w-[28rem] flex-col">
-        <div className="flex min-h-[4rem] items-center justify-between gap-4">
-          <SiteLogo priority />
+        <div className="flex min-h-[3.5rem] items-center justify-between gap-4">
+          <SiteLogo imageClassName="h-[2.9rem] md:h-[2.9rem]" priority />
           <button
             ref={closeButtonRef}
             aria-label="Sluit menu"
@@ -106,11 +106,11 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
             onClick={onClose}
             type="button"
           >
-            <Icon className="h-6 w-6" name="close" />
+            <Icon className="h-[1.4rem] w-[1.4rem]" name="close" />
           </button>
         </div>
 
-        <nav aria-label="Mobiele navigatie" className="pt-12">
+        <nav aria-label="Mobiele navigatie" className="pt-9">
           <ul className="grid gap-2">
             {items.map((item) => {
               const isActive = isActivePath(activePath, item.href);
@@ -119,14 +119,14 @@ export function MobileMenu({ activePath, isOpen, items, onClose }: MobileMenuPro
                 <li key={item.href}>
                   <Link
                     aria-current={isActive ? "page" : undefined}
-                    className={`flex min-h-11 items-center gap-4 rounded-[var(--radius-sm)] px-1 text-[1rem] font-semibold transition-colors ${
+                    className={`flex min-h-11 items-center gap-[1.1rem] rounded-[var(--radius-sm)] px-1 text-[0.96rem] font-semibold transition-colors ${
                       isActive ? "text-brand-blue" : "text-text-primary hover:text-brand-blue"
                     }`}
                     href={item.href}
                     onClick={onClose}
                   >
                     <Icon
-                      className={`h-[1.15rem] w-[1.15rem] shrink-0 ${
+                      className={`h-[1.05rem] w-[1.05rem] shrink-0 ${
                         isActive ? "text-brand-blue" : "text-text-primary"
                       }`}
                       name={navigationIcons[item.href]}
