@@ -53,7 +53,7 @@ export function SiteHeader() {
     >
       <Container
         as="div"
-        className="flex min-h-[var(--header-height)] items-center justify-between gap-5 py-2 md:py-3"
+        className="flex min-h-[var(--header-height)] items-center justify-between gap-5 py-1 md:py-3"
       >
         <SiteLogo priority />
 
@@ -92,7 +92,7 @@ export function SiteHeader() {
           onClick={() => setIsMenuOpen(true)}
           type="button"
         >
-          <Icon className="h-7 w-7" name="menu" />
+          <Icon className="h-6 w-6" name="menu" />
         </button>
       </Container>
 

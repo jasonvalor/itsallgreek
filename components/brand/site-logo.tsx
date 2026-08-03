@@ -21,10 +21,10 @@ export function SiteLogo({ className = "", imageClassName = "", priority = false
     >
       <Image
         alt="It's All Greek Food & Drinks"
-        className={`h-[3.4rem] w-auto md:h-16 ${imageClassName}`}
+        className={`h-12 w-auto md:h-16 ${imageClassName}`}
         height={logoSize.height}
         priority={priority}
-        sizes="(min-width: 768px) 150px, 92px"
+        sizes="(min-width: 768px) 150px, 78px"
         src="/images/logo-dark-transparent.png"
         width={logoSize.width}
       />

@@ -66,6 +66,24 @@ async function expectNoHorizontalOverflow(page: Page) {
   );
 }
 
+async function expectNoInternalScrollContainer(page: Page) {
+  const internalScrollers = await page.evaluate(() =>
+    [...document.querySelectorAll<HTMLElement>("body *")]
+      .filter((element) => {
+        const style = getComputedStyle(element);
+        return /(auto|scroll)/.test(style.overflowY) && element.scrollHeight > element.clientHeight + 1;
+      })
+      .map((element) => ({
+        className: String(element.className),
+        id: element.id,
+        testId: element.getAttribute("data-testid"),
+        tagName: element.tagName,
+      })),
+  );
+
+  expect(internalScrollers, "homepage should not create unintended internal scroll containers").toEqual([]);
+}
+
 async function expectCriticalImagesLoaded(page: Page) {
   const brokenImages = await page.evaluate(() =>
     [...document.images]
@@ -80,11 +98,14 @@ async function expectCompactMobileHeader(page: Page) {
   const header = page.getByRole("banner");
   const headerBox = await header.boundingBox();
 
-  expect(headerBox?.height, "mobile header height").toBeGreaterThanOrEqual(64);
-  expect(headerBox?.height, "mobile header height").toBeLessThanOrEqual(76);
+  expect(headerBox?.height, "mobile header height").toBeGreaterThanOrEqual(58);
+  expect(headerBox?.height, "mobile header height").toBeLessThanOrEqual(68);
 
   const logo = header.getByAltText("It's All Greek Food & Drinks");
   await expect(logo).toHaveAttribute("src", /logo-dark-transparent/);
+  const logoBox = await logo.boundingBox();
+  expect(logoBox?.width, "mobile logo width").toBeGreaterThanOrEqual(72);
+  expect(logoBox?.width, "mobile logo width").toBeLessThanOrEqual(90);
 
   const logoParentBackground = await logo.evaluate((image) => {
     const parent = image.closest("a");
@@ -96,6 +117,113 @@ async function expectCompactMobileHeader(page: Page) {
   const menuButtonBox = await menuButton.boundingBox();
   expect(menuButtonBox?.width, "hamburger hit area should stay compact").toBeLessThanOrEqual(48);
   expect(menuButtonBox?.height, "hamburger hit area should stay compact").toBeLessThanOrEqual(48);
+
+  const menuButtonChrome = await menuButton.evaluate((button) => {
+    const style = getComputedStyle(button);
+    const icon = button.querySelector("svg");
+    const iconBox = icon?.getBoundingClientRect();
+
+    return {
+      backgroundColor: style.backgroundColor,
+      borderColor: style.borderTopColor,
+      iconHeight: iconBox?.height ?? 0,
+      iconWidth: iconBox?.width ?? 0,
+    };
+  });
+  expect(menuButtonChrome.backgroundColor, "hamburger should not show a visible box").toBe(
+    "rgba(0, 0, 0, 0)",
+  );
+  expect(menuButtonChrome.borderColor, "hamburger border should stay invisible").toBe("rgba(0, 0, 0, 0)");
+  expect(menuButtonChrome.iconWidth, "hamburger visible icon width").toBeGreaterThanOrEqual(22);
+  expect(menuButtonChrome.iconWidth, "hamburger visible icon width").toBeLessThanOrEqual(26);
+  expect(menuButtonChrome.iconHeight, "hamburger visible icon height").toBeGreaterThanOrEqual(22);
+  expect(menuButtonChrome.iconHeight, "hamburger visible icon height").toBeLessThanOrEqual(26);
+}
+
+async function expectMobileHomeFidelity(page: Page) {
+  const mobileHome = page.getByTestId("mobile-home");
+  const heading = mobileHome.getByRole("heading", { level: 1, name: /Authentiek/i });
+  const cta = mobileHome.getByRole("link", { name: /Bestel nu/i });
+  const detailImage = page.getByTestId("mobile-hero-detail-image");
+  const mainImage = page.getByTestId("mobile-hero-main-image");
+
+  const headingBox = await heading.boundingBox();
+  expect(headingBox?.width, "mobile hero heading width").toBeLessThanOrEqual(240);
+  expect(headingBox?.y, "mobile hero heading should be pulled upward").toBeLessThanOrEqual(115);
+
+  const ctaBox = await cta.boundingBox();
+  expect(ctaBox?.width, "mobile hero CTA width").toBeGreaterThanOrEqual(140);
+  expect(ctaBox?.width, "mobile hero CTA width").toBeLessThanOrEqual(170);
+  expect(ctaBox?.height, "mobile hero CTA height").toBeGreaterThanOrEqual(40);
+  expect(ctaBox?.height, "mobile hero CTA height").toBeLessThanOrEqual(46);
+  await expect(cta).toBeInViewport();
+
+  const imageSources = await mobileHome.locator("img").evaluateAll((images) =>
+    images.map((image) => (image as HTMLImageElement).currentSrc || (image as HTMLImageElement).src),
+  );
+  expect(
+    imageSources.some((src) => src.includes("mobile-drink-detail")),
+    "mobile hero should use the single-subject detail crop",
+  ).toBe(true);
+  expect(
+    imageSources.some((src) => src.includes("food-collage.png")),
+    "mobile hero should not use the four-panel collage",
+  ).toBe(false);
+
+  const detailBox = await detailImage.boundingBox();
+  expect(detailBox?.width, "right detail image width").toBeLessThanOrEqual(90);
+  expect(detailBox?.height, "right detail image height").toBeLessThanOrEqual(180);
+
+  const mainBox = await mainImage.boundingBox();
+  expect(mainBox?.y, "main salad image should begin higher").toBeLessThanOrEqual(405);
+
+  await expectNoInternalScrollContainer(page);
+}
+
+async function expectCompactMobileMenu(page: Page) {
+  const dialog = page.getByRole("dialog", { name: /Mobiel menu/i });
+  const closeButton = dialog.getByRole("button", { name: /Sluit menu/i });
+  const closeBox = await closeButton.boundingBox();
+
+  expect(closeBox?.width, "close hit area should stay compact").toBeLessThanOrEqual(48);
+  expect(closeBox?.height, "close hit area should stay compact").toBeLessThanOrEqual(48);
+
+  const closeChrome = await closeButton.evaluate((button) => {
+    const style = getComputedStyle(button);
+    const icon = button.querySelector("svg");
+    const iconBox = icon?.getBoundingClientRect();
+
+    return {
+      backgroundColor: style.backgroundColor,
+      borderTopWidth: style.borderTopWidth,
+      iconHeight: iconBox?.height ?? 0,
+      iconWidth: iconBox?.width ?? 0,
+    };
+  });
+  expect(closeChrome.backgroundColor, "close control should not show a visible box").toBe(
+    "rgba(0, 0, 0, 0)",
+  );
+  expect(closeChrome.borderTopWidth, "close control should not show a visible border").toBe("0px");
+  expect(closeChrome.iconWidth, "close visible icon width").toBeGreaterThanOrEqual(20);
+  expect(closeChrome.iconWidth, "close visible icon width").toBeLessThanOrEqual(26);
+  expect(closeChrome.iconHeight, "close visible icon height").toBeGreaterThanOrEqual(20);
+  expect(closeChrome.iconHeight, "close visible icon height").toBeLessThanOrEqual(26);
+
+  const firstLink = dialog.getByRole("link", { name: /^Home$/i });
+  const firstLinkBox = await firstLink.boundingBox();
+  const viewport = page.viewportSize();
+  expect(firstLinkBox?.y, "first mobile nav link should sit in the upper half").toBeLessThan(
+    (viewport?.height ?? 844) / 2,
+  );
+
+  const firstIconSize = await firstLink.locator("svg").evaluate((icon) => {
+    const rect = icon.getBoundingClientRect();
+    return { height: rect.height, width: rect.width };
+  });
+  expect(firstIconSize.width, "mobile nav icon width").toBeGreaterThanOrEqual(16);
+  expect(firstIconSize.width, "mobile nav icon width").toBeLessThanOrEqual(22);
+  expect(firstIconSize.height, "mobile nav icon height").toBeGreaterThanOrEqual(16);
+  expect(firstIconSize.height, "mobile nav icon height").toBeLessThanOrEqual(22);
 }
 
 test.describe("route smoke", () => {
@@ -144,6 +272,7 @@ test.describe("mobile approved design structure", () => {
     await expect(mobileHome.getByRole("heading", { level: 1, name: /Authentiek/i })).toBeVisible();
     await expect(mobileHome.getByRole("link", { name: /Bestel nu/i })).toBeVisible();
     await expect(mobileHome.getByRole("heading", { name: /Onze specialiteiten/i })).toBeVisible();
+    await expectMobileHomeFidelity(page);
 
     const mobileImageSources = await mobileHome.locator("img").evaluateAll((images) =>
       images.map((image) => (image as HTMLImageElement).currentSrc || (image as HTMLImageElement).src),
@@ -221,6 +350,7 @@ test.describe("navigation smoke", () => {
     await menuButton.click();
     await expect(menuButton).toHaveAttribute("aria-expanded", "true");
     await expect(page.getByRole("dialog", { name: /Mobiel menu/i })).toBeVisible();
+    await expectCompactMobileMenu(page);
     await expect(page.getByRole("button", { name: /Sluit menu/i })).toBeFocused();
     await expect(page.getByRole("dialog", { name: /Mobiel menu/i }).getByRole("link", { name: /^Home$/i })).toHaveAttribute(
       "aria-current",
