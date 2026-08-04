@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SiteLogo } from "@/components/brand/site-logo";
-import { Container } from "@/components/layout/container";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -22,6 +21,7 @@ export function SiteHeader() {
   const primaryItems = navigationItems.slice(0, -1);
   const orderItem = navigationItems[navigationItems.length - 1];
   const isOrderActive = isActivePath(pathname, orderItem.href);
+  const isKnownRoute = navigationItems.some((item) => pathname === item.href);
 
   useEffect(() => {
     const updateScrolled = () => {
@@ -43,19 +43,20 @@ export function SiteHeader() {
     });
   }, []);
 
+  if (!isKnownRoute) {
+    return null;
+  }
+
   return (
     <header
-      className={`sticky top-0 z-40 transition-colors duration-200 ${
+      className={`sticky top-0 z-40 transition-colors duration-200 md:border-b ${
         isScrolled
-          ? "bg-[var(--brand-header-background)] md:border-b md:border-border-subtle md:shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] md:backdrop-blur-md"
-          : "bg-background/96 md:border-b md:border-transparent md:backdrop-blur-sm"
+          ? "bg-transparent md:border-border-subtle md:bg-[var(--brand-header-background)] md:shadow-[0_1rem_2rem_rgb(0_0_0_/_0.22)] md:backdrop-blur-md"
+          : "bg-transparent md:border-transparent md:bg-background/96 md:backdrop-blur-sm"
       }`}
     >
-      <Container
-        as="div"
-        className="flex min-h-[var(--header-height)] items-center justify-between gap-5 py-1 md:py-3"
-      >
-        <SiteLogo priority />
+      <div className="site-header-inner flex items-center justify-between gap-5">
+        <SiteLogo imageClassName="h-[4.8rem] md:h-16" priority />
 
         <nav aria-label="Primaire navigatie" className="hidden items-center gap-2 lg:flex">
           {primaryItems.map((item) => {
@@ -88,13 +89,13 @@ export function SiteHeader() {
           aria-controls="mobile-navigation-dialog"
           aria-expanded={isMenuOpen}
           aria-label="Open menu"
-          className="-mr-2 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-transparent bg-transparent text-text-primary transition-colors hover:text-brand-blue active:text-brand-blue lg:hidden"
+          className="-mr-2 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center border border-transparent bg-transparent p-0 text-text-primary transition-colors hover:text-brand-blue active:text-brand-blue lg:hidden"
           onClick={() => setIsMenuOpen(true)}
           type="button"
         >
-          <Icon className="h-6 w-6" name="menu" />
+          <Icon className="h-8 w-8" name="menu" strokeWidth={2.2} />
         </button>
-      </Container>
+      </div>
 
       <div>
         <MobileMenu activePath={pathname} isOpen={isMenuOpen} items={navigationItems} onClose={closeMenu} />

@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
-import { FeatureCard } from "@/components/ui/feature-card";
 import { MobileValueIcons, type MobileValueIcon } from "@/components/ui/mobile-value-icons";
-import { PageIntro } from "@/components/ui/page-intro";
-import { brandValues, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Over ons",
@@ -17,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  const mobileValues: readonly MobileValueIcon[] = [
+  const values: readonly MobileValueIcon[] = [
     { icon: "temple", label: "Authentieke recepten" },
     { icon: "leaf", label: "Verse ingredienten" },
     { icon: "heart", label: "Griekse gastvrijheid" },
@@ -25,96 +22,42 @@ export default function AboutPage() {
 
   return (
     <main className="flex-1" id="main-content">
-      <section className="mobile-approved-page flex flex-col md:hidden" data-testid="mobile-about-page">
-        <div className="space-y-4">
+      <section className="mobile-approved-page flex flex-col" data-testid="mobile-about-page">
+        <div>
           <h1 className="mobile-title">OVER ONS</h1>
-          <div className="mobile-accent-line" />
+          <div className="mobile-accent-line mt-7" />
         </div>
 
-        <div className="relative mt-6 aspect-[1.38] overflow-hidden rounded-[0.6rem] border border-border-subtle bg-surface-secondary">
+        <div className="relative mt-12 aspect-[1.22] overflow-hidden rounded-[0.85rem] border border-border-subtle bg-surface-secondary">
           <Image
             alt="Zonnig Grieks terras met witte muren en blauwe details"
-            className="object-cover object-[58%_42%]"
+            className="object-cover object-[55%_45%]"
             fill
             priority
-            sizes="(max-width: 430px) 100vw, 430px"
+            sizes="(max-width: 767px) 100vw, 500px"
             src="/images/restaurant-day.png"
           />
         </div>
 
-        <div className="mt-5 space-y-4">
-          <p className="text-[1.03rem] font-bold leading-7 text-text-primary">
+        <div className="mt-12">
+          <p className="text-[clamp(1.35rem,6vw,1.62rem)] font-bold leading-[1.55] text-text-primary">
             Bij {siteConfig.name} draait alles om gastvrijheid, kwaliteit en de smaken van Griekenland.
           </p>
-          <p className="text-[0.9rem] leading-7 text-text-secondary">
+          <p className="mt-8 text-[clamp(1rem,4.4vw,1.16rem)] font-semibold leading-[1.85] text-text-secondary">
             Iedere gast moet zich welkom voelen. Of je nu langskomt om te eten, iets afhaalt of laat bezorgen.
           </p>
         </div>
 
-        <div className="mt-6">
-          <MobileValueIcons items={mobileValues} />
+        <div className="mt-12">
+          <MobileValueIcons items={values} />
         </div>
 
-        <div className="mt-auto pt-6">
-          <Button className="w-full border-brand-blue/95 bg-transparent" href="/menu" variant="secondary">
+        <div className="mt-auto pt-12">
+          <Button className="h-[3.8rem] w-full border-2 border-brand-blue bg-transparent" href="/menu" variant="secondary">
             Bekijk menu
           </Button>
         </div>
       </section>
-
-      <div className="hidden md:block page-shell">
-        <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-        <div className="space-y-7">
-          <PageIntro
-            body={`Bij ${siteConfig.name} draait alles om gastvrijheid, kwaliteit en de smaken van Griekenland.`}
-            eyebrow="Over ons"
-            heading={`Over ${siteConfig.name}`}
-          />
-          <div className="space-y-4 text-base leading-8 text-text-secondary">
-            <p>
-              Iedere gast moet zich welkom voelen. Of je nu langskomt om uitgebreid te dineren,
-              iets af te halen of een bestelling laat bezorgen.
-            </p>
-            <p>
-              De sfeer blijft warm en rustig, met aandacht voor authentieke gerechten en helder
-              contact met het restaurant.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button href="/menu">Bekijk menu</Button>
-            <Button href="/contact" variant="secondary">
-              Neem contact op
-            </Button>
-          </div>
-        </div>
-
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] border border-border-subtle bg-surface">
-          <Image
-            alt="Zonnig Grieks terras met witte muren en blauwe details"
-            className="object-cover"
-            fill
-            priority
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            src="/images/restaurant-day.png"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgb(15_15_16_/_0.2))]" />
-        </div>
-        </Container>
-
-        <section className="mt-16 border-y border-border-subtle bg-surface py-[var(--space-section-y)]">
-          <Container className="space-y-10">
-          <div className="max-w-2xl">
-            <h2 className="text-5xl text-text-primary sm:text-6xl">Waar we voor staan</h2>
-            <div className="mt-4 h-0.5 w-12 rounded-full bg-brand-blue" />
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {brandValues.map((feature) => (
-              <FeatureCard compact feature={feature} key={feature.title} />
-            ))}
-          </div>
-          </Container>
-        </section>
-      </div>
     </main>
   );
 }
