@@ -7,15 +7,20 @@ export type MobileValueIcon = {
 };
 
 type MobileValueIconsProps = {
+  compact?: boolean;
   items: readonly MobileValueIcon[];
 };
 
-export function MobileValueIcons({ items }: MobileValueIconsProps) {
+export function MobileValueIcons({ compact = false, items }: MobileValueIconsProps) {
+  const iconWrapClass = compact
+    ? "mx-auto mb-4 flex h-12 w-12 items-center justify-center text-brand-blue"
+    : "mx-auto mb-5 flex h-12 w-12 items-center justify-center text-brand-blue";
+
   return (
     <ul className="grid grid-cols-3 divide-x divide-border-subtle/70">
       {items.map((item) => (
         <li className="min-w-0 px-2 text-center" key={item.label}>
-          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center text-brand-blue">
+          <div className={iconWrapClass}>
             <Icon className="h-11 w-11" name={item.icon} strokeWidth={2} />
           </div>
           <p className="break-normal font-display text-[clamp(1rem,4.2vw,1.25rem)] uppercase leading-[1.18] text-text-primary [overflow-wrap:normal]">
