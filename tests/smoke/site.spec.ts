@@ -167,9 +167,77 @@ async function expectMobileHomeFidelity(page: Page) {
     "mobile hero should not render the old separate image sources",
   ).toBe(false);
 
+  const artworkEdgeMetrics = await mobileHome.locator("img").first().evaluate((imageElement) => {
+    const image = imageElement as HTMLImageElement;
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    if (!context) {
+      return null;
+    }
+
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    context.drawImage(image, 0, 0);
+    const sampleColumn = (x: number) => {
+      const pixels = context.getImageData(x, 0, 1, canvas.height).data;
+      let brightRows = 0;
+      let max = 0;
+      let sum = 0;
+
+      for (let index = 0; index < pixels.length; index += 4) {
+        const lightness = Math.max(pixels[index], pixels[index + 1], pixels[index + 2]);
+        max = Math.max(max, lightness);
+        sum += lightness;
+        if (lightness > 130) {
+          brightRows += 1;
+        }
+      }
+
+      return {
+        average: sum / canvas.height,
+        brightRows,
+        max,
+      };
+    };
+
+    return {
+      left: sampleColumn(0),
+      right: sampleColumn(canvas.width - 1),
+    };
+  });
+  expect(artworkEdgeMetrics?.left.average, "artwork left edge should blend into the page background").toBeLessThan(70);
+  expect(artworkEdgeMetrics?.left.brightRows, "artwork left edge should not contain a vertical light line").toBeLessThan(24);
+  expect(artworkEdgeMetrics?.right.average, "artwork right edge should avoid a loose light border").toBeLessThan(96);
+
   const artworkBox = await artwork.boundingBox();
   expect(artworkBox?.y, "combined artwork should start near the CTA").toBeLessThanOrEqual(500);
   expect(artworkBox?.width, "combined artwork should span the approved mobile frame").toBeGreaterThanOrEqual(370);
+
+  const specialtyMetrics = await page.evaluate(() => {
+    const section = document.querySelector("#mobile-specialties-heading")?.closest("section");
+    const title = document.querySelector("#mobile-specialties-heading");
+    const icons = [...document.querySelectorAll("#mobile-specialties-heading + ul li svg")];
+    const labels = [...document.querySelectorAll("#mobile-specialties-heading + ul li p")];
+    const sectionBox = section?.getBoundingClientRect();
+    const titleBox = title?.getBoundingClientRect();
+    const iconTops = icons.map((icon) => icon.getBoundingClientRect().top);
+    const iconBottoms = icons.map((icon) => icon.getBoundingClientRect().bottom);
+    const labelTops = labels.map((label) => label.getBoundingClientRect().top);
+    const labelBottoms = labels.map((label) => label.getBoundingClientRect().bottom);
+
+    return {
+      bottomPadding: sectionBox && labelBottoms.length ? sectionBox.bottom - Math.max(...labelBottoms) : null,
+      height: sectionBox?.height ?? null,
+      iconToLabel: iconBottoms.length && labelTops.length ? Math.min(...labelTops) - Math.max(...iconBottoms) : null,
+      titleToIcon: titleBox && iconTops.length ? Math.min(...iconTops) - titleBox.bottom : null,
+      topPadding: sectionBox && titleBox ? titleBox.top - sectionBox.top : null,
+    };
+  });
+  expect(specialtyMetrics.height, "specialties card should stay compact").toBeLessThanOrEqual(180);
+  expect(specialtyMetrics.topPadding, "specialties card top padding").toBeLessThanOrEqual(20);
+  expect(specialtyMetrics.titleToIcon, "specialties title-to-icon spacing").toBeLessThanOrEqual(20);
+  expect(specialtyMetrics.iconToLabel, "specialties icon-to-label spacing").toBeLessThanOrEqual(12);
+  expect(specialtyMetrics.bottomPadding, "specialties card bottom padding").toBeLessThanOrEqual(22);
 
   await expectNoInternalScrollContainer(page);
 }

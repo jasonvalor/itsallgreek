@@ -56,10 +56,10 @@ export default function Home() {
 
           <section
             aria-labelledby="mobile-specialties-heading"
-            className="mobile-surface relative -mx-[calc(var(--mobile-page-x)-0.4rem)] -mt-10 px-4 pb-7 pt-6"
+            className="mobile-surface relative -mx-[calc(var(--mobile-page-x)-0.4rem)] -mt-10 px-4 pb-5 pt-4"
           >
             <h2
-              className="mb-6 text-center text-[1.45rem] leading-none text-text-primary"
+              className="mb-4 text-center text-[1.35rem] leading-none text-text-primary"
               id="mobile-specialties-heading"
             >
               ONZE SPECIALITEITEN
