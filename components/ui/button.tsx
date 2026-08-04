@@ -25,7 +25,7 @@ type NativeButtonProps = SharedButtonProps &
 type ButtonProps = LinkButtonProps | NativeButtonProps;
 
 const baseClasses =
-  "inline-flex min-h-11 items-center justify-center gap-3 rounded-[var(--radius-sm)] px-5 py-3 text-sm font-semibold leading-none transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 md:text-base";
+  "inline-flex min-h-12 items-center justify-center gap-4 rounded-[var(--radius-sm)] px-6 py-3 text-[0.95rem] font-bold uppercase leading-none transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 md:text-base";
 
 const variants = {
   primary:
@@ -50,7 +50,7 @@ export function Button({
   const content = (
     <>
       <span>{children}</span>
-      {showArrow ? <Icon className="h-4 w-4 shrink-0" name="arrowRight" /> : null}
+      {showArrow ? <Icon className="h-5 w-5 shrink-0" name="arrowRight" strokeWidth={2.2} /> : null}
     </>
   );
   const classes = `${baseClasses} ${variants[variant]} ${className}`;

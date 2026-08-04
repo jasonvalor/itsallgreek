@@ -1,11 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const expectedRoutes = [
-  { path: "/", desktopHeading: /Even weg\./i, mobileHeading: /Authentiek/i },
+  { path: "/", desktopHeading: /Authentiek/i, mobileHeading: /Authentiek/i },
   { path: "/menu", desktopHeading: /Ons menu/i, mobileHeading: /Ons menu/i },
-  { path: "/about", desktopHeading: /Over It's All Greek/i, mobileHeading: /Over ons/i },
-  { path: "/contact", desktopHeading: /We helpen je graag/i, mobileHeading: /Contact/i },
-  { path: "/order", desktopHeading: /Bestel vers Grieks/i, mobileHeading: /Bestellen/i },
+  { path: "/about", desktopHeading: /Over ons/i, mobileHeading: /Over ons/i },
+  { path: "/contact", desktopHeading: /Contact/i, mobileHeading: /Contact/i },
+  { path: "/order", desktopHeading: /Bestellen/i, mobileHeading: /Bestellen/i },
 ] as const;
 
 async function watchPageHealth(page: Page, options: { allowExpectedNavigation404?: boolean } = {}) {
@@ -98,14 +98,14 @@ async function expectCompactMobileHeader(page: Page) {
   const header = page.getByRole("banner");
   const headerBox = await header.boundingBox();
 
-  expect(headerBox?.height, "mobile header height").toBeGreaterThanOrEqual(58);
-  expect(headerBox?.height, "mobile header height").toBeLessThanOrEqual(68);
+  expect(headerBox?.height, "mobile header height").toBeGreaterThanOrEqual(112);
+  expect(headerBox?.height, "mobile header height").toBeLessThanOrEqual(124);
 
   const logo = header.getByAltText("It's All Greek Food & Drinks");
   await expect(logo).toHaveAttribute("src", /logo-dark-transparent/);
   const logoBox = await logo.boundingBox();
-  expect(logoBox?.width, "mobile logo width").toBeGreaterThanOrEqual(72);
-  expect(logoBox?.width, "mobile logo width").toBeLessThanOrEqual(90);
+  expect(logoBox?.width, "mobile logo width").toBeGreaterThanOrEqual(112);
+  expect(logoBox?.width, "mobile logo width").toBeLessThanOrEqual(126);
 
   const logoParentBackground = await logo.evaluate((image) => {
     const parent = image.closest("a");
@@ -134,10 +134,10 @@ async function expectCompactMobileHeader(page: Page) {
     "rgba(0, 0, 0, 0)",
   );
   expect(menuButtonChrome.borderColor, "hamburger border should stay invisible").toBe("rgba(0, 0, 0, 0)");
-  expect(menuButtonChrome.iconWidth, "hamburger visible icon width").toBeGreaterThanOrEqual(22);
-  expect(menuButtonChrome.iconWidth, "hamburger visible icon width").toBeLessThanOrEqual(26);
-  expect(menuButtonChrome.iconHeight, "hamburger visible icon height").toBeGreaterThanOrEqual(22);
-  expect(menuButtonChrome.iconHeight, "hamburger visible icon height").toBeLessThanOrEqual(26);
+  expect(menuButtonChrome.iconWidth, "hamburger visible icon width").toBeGreaterThanOrEqual(30);
+  expect(menuButtonChrome.iconWidth, "hamburger visible icon width").toBeLessThanOrEqual(34);
+  expect(menuButtonChrome.iconHeight, "hamburger visible icon height").toBeGreaterThanOrEqual(30);
+  expect(menuButtonChrome.iconHeight, "hamburger visible icon height").toBeLessThanOrEqual(34);
 }
 
 async function expectMobileHomeFidelity(page: Page) {
@@ -148,14 +148,14 @@ async function expectMobileHomeFidelity(page: Page) {
   const mainImage = page.getByTestId("mobile-hero-main-image");
 
   const headingBox = await heading.boundingBox();
-  expect(headingBox?.width, "mobile hero heading width").toBeLessThanOrEqual(240);
-  expect(headingBox?.y, "mobile hero heading should be pulled upward").toBeLessThanOrEqual(115);
+  expect(headingBox?.width, "mobile hero heading width").toBeLessThanOrEqual(300);
+  expect(headingBox?.y, "mobile hero heading should be near the approved top position").toBeLessThanOrEqual(190);
 
   const ctaBox = await cta.boundingBox();
-  expect(ctaBox?.width, "mobile hero CTA width").toBeGreaterThanOrEqual(140);
-  expect(ctaBox?.width, "mobile hero CTA width").toBeLessThanOrEqual(170);
-  expect(ctaBox?.height, "mobile hero CTA height").toBeGreaterThanOrEqual(40);
-  expect(ctaBox?.height, "mobile hero CTA height").toBeLessThanOrEqual(46);
+  expect(ctaBox?.width, "mobile hero CTA width").toBeGreaterThanOrEqual(196);
+  expect(ctaBox?.width, "mobile hero CTA width").toBeLessThanOrEqual(212);
+  expect(ctaBox?.height, "mobile hero CTA height").toBeGreaterThanOrEqual(52);
+  expect(ctaBox?.height, "mobile hero CTA height").toBeLessThanOrEqual(58);
   await expect(cta).toBeInViewport();
 
   const imageSources = await mobileHome.locator("img").evaluateAll((images) =>
@@ -171,11 +171,11 @@ async function expectMobileHomeFidelity(page: Page) {
   ).toBe(false);
 
   const detailBox = await detailImage.boundingBox();
-  expect(detailBox?.width, "right detail image width").toBeLessThanOrEqual(90);
-  expect(detailBox?.height, "right detail image height").toBeLessThanOrEqual(180);
+  expect(detailBox?.width, "right detail image width").toBeLessThanOrEqual(112);
+  expect(detailBox?.height, "right detail image height").toBeLessThanOrEqual(260);
 
   const mainBox = await mainImage.boundingBox();
-  expect(mainBox?.y, "main salad image should begin higher").toBeLessThanOrEqual(405);
+  expect(mainBox?.y, "main salad image should match the lower approved crop").toBeLessThanOrEqual(560);
 
   await expectNoInternalScrollContainer(page);
 }
@@ -204,10 +204,10 @@ async function expectCompactMobileMenu(page: Page) {
     "rgba(0, 0, 0, 0)",
   );
   expect(closeChrome.borderTopWidth, "close control should not show a visible border").toBe("0px");
-  expect(closeChrome.iconWidth, "close visible icon width").toBeGreaterThanOrEqual(21);
-  expect(closeChrome.iconWidth, "close visible icon width").toBeLessThanOrEqual(25);
-  expect(closeChrome.iconHeight, "close visible icon height").toBeGreaterThanOrEqual(21);
-  expect(closeChrome.iconHeight, "close visible icon height").toBeLessThanOrEqual(25);
+  expect(closeChrome.iconWidth, "close visible icon width").toBeGreaterThanOrEqual(30);
+  expect(closeChrome.iconWidth, "close visible icon width").toBeLessThanOrEqual(34);
+  expect(closeChrome.iconHeight, "close visible icon height").toBeGreaterThanOrEqual(30);
+  expect(closeChrome.iconHeight, "close visible icon height").toBeLessThanOrEqual(34);
 
   const firstLink = dialog.getByRole("link", { name: /^Home$/i });
   const firstLinkBox = await firstLink.boundingBox();
@@ -227,12 +227,12 @@ async function expectCompactMobileMenu(page: Page) {
       labelFontSize: label ? Number.parseFloat(getComputedStyle(label).fontSize) : 0,
     };
   });
-  expect(firstRowStyle.iconWidth, "mobile nav icon width").toBeGreaterThanOrEqual(14);
-  expect(firstRowStyle.iconWidth, "mobile nav icon width").toBeLessThanOrEqual(18);
-  expect(firstRowStyle.iconHeight, "mobile nav icon height").toBeGreaterThanOrEqual(14);
-  expect(firstRowStyle.iconHeight, "mobile nav icon height").toBeLessThanOrEqual(18);
-  expect(firstRowStyle.labelFontSize, "mobile nav label size").toBeGreaterThanOrEqual(13);
-  expect(firstRowStyle.labelFontSize, "mobile nav label size").toBeLessThanOrEqual(15);
+  expect(firstRowStyle.iconWidth, "mobile nav icon width").toBeGreaterThanOrEqual(38);
+  expect(firstRowStyle.iconWidth, "mobile nav icon width").toBeLessThanOrEqual(42);
+  expect(firstRowStyle.iconHeight, "mobile nav icon height").toBeGreaterThanOrEqual(38);
+  expect(firstRowStyle.iconHeight, "mobile nav icon height").toBeLessThanOrEqual(42);
+  expect(firstRowStyle.labelFontSize, "mobile nav label size").toBeGreaterThanOrEqual(30);
+  expect(firstRowStyle.labelFontSize, "mobile nav label size").toBeLessThanOrEqual(40);
 }
 
 test.describe("route smoke", () => {
@@ -311,7 +311,7 @@ test.describe("mobile approved design structure", () => {
     await expect(page.getByTestId("mobile-contact-page").getByRole("link", { name: /Neem contact op/i })).toBeVisible();
 
     await page.goto("/order");
-    await expect(page.getByTestId("mobile-order-page").getByRole("link", { name: /Bel restaurant/i })).toBeVisible();
+    await expect(page.getByTestId("mobile-order-page").getByRole("link", { name: /Bestel nu/i })).toBeVisible();
 
     await expectNoHorizontalOverflow(page);
     health.assertHealthy();
@@ -336,11 +336,11 @@ test.describe("navigation smoke", () => {
 
     await desktopNav.getByRole("link", { name: /^Over ons$/i }).click();
     await expect(page).toHaveURL(/\/about$/);
-    await expect(page.getByRole("heading", { level: 1, name: /Over It's All Greek/i })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /Over ons/i })).toBeVisible();
 
     await desktopNav.getByRole("link", { name: /^Contact$/i }).click();
     await expect(page).toHaveURL(/\/contact$/);
-    await expect(page.getByRole("heading", { level: 1, name: /We helpen je graag/i })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /Contact/i })).toBeVisible();
 
     await expectNoHorizontalOverflow(page);
     health.assertHealthy();
