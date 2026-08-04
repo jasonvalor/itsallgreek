@@ -144,8 +144,7 @@ async function expectMobileHomeFidelity(page: Page) {
   const mobileHome = page.getByTestId("mobile-home");
   const heading = mobileHome.getByRole("heading", { level: 1, name: /Authentiek/i });
   const cta = mobileHome.getByRole("link", { name: /Bestel nu/i });
-  const detailImage = page.getByTestId("mobile-hero-detail-image");
-  const mainImage = page.getByTestId("mobile-hero-main-image");
+  const artwork = page.getByTestId("mobile-hero-artwork");
 
   const headingBox = await heading.boundingBox();
   expect(headingBox?.width, "mobile hero heading width").toBeLessThanOrEqual(300);
@@ -161,21 +160,16 @@ async function expectMobileHomeFidelity(page: Page) {
   const imageSources = await mobileHome.locator("img").evaluateAll((images) =>
     images.map((image) => (image as HTMLImageElement).currentSrc || (image as HTMLImageElement).src),
   );
+  expect(imageSources, "mobile hero should render one coherent artwork image").toHaveLength(1);
+  expect(imageSources[0], "mobile hero should use the combined artwork asset").toContain("home-hero-artwork");
   expect(
-    imageSources.some((src) => src.includes("mobile-drink-detail")),
-    "mobile hero should use the single-subject detail crop",
-  ).toBe(true);
-  expect(
-    imageSources.some((src) => src.includes("food-collage.png")),
-    "mobile hero should not use the four-panel collage",
+    imageSources.some((src) => src.includes("mobile-drink-detail") || src.includes("menu-salad")),
+    "mobile hero should not render the old separate image sources",
   ).toBe(false);
 
-  const detailBox = await detailImage.boundingBox();
-  expect(detailBox?.width, "right detail image width").toBeLessThanOrEqual(112);
-  expect(detailBox?.height, "right detail image height").toBeLessThanOrEqual(260);
-
-  const mainBox = await mainImage.boundingBox();
-  expect(mainBox?.y, "main salad image should match the lower approved crop").toBeLessThanOrEqual(560);
+  const artworkBox = await artwork.boundingBox();
+  expect(artworkBox?.y, "combined artwork should start near the CTA").toBeLessThanOrEqual(500);
+  expect(artworkBox?.width, "combined artwork should span the approved mobile frame").toBeGreaterThanOrEqual(370);
 
   await expectNoInternalScrollContainer(page);
 }
@@ -286,10 +280,13 @@ test.describe("mobile approved design structure", () => {
     const mobileImageSources = await mobileHome.locator("img").evaluateAll((images) =>
       images.map((image) => (image as HTMLImageElement).currentSrc || (image as HTMLImageElement).src),
     );
+    expect(mobileImageSources).toHaveLength(1);
+    expect(mobileImageSources[0]).toContain("home-hero-artwork");
     expect(
       mobileImageSources.some((src) => src.includes("restaurant-day.png")),
       "mobile homepage should not use the restaurant photo hero",
     ).toBe(false);
+    await expect(mobileHome.locator("#mobile-specialties-heading + ul > li")).toHaveCount(3);
 
     await expectNoHorizontalOverflow(page);
     health.assertHealthy();
