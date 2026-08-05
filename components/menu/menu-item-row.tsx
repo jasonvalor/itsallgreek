@@ -6,8 +6,8 @@ type MenuItemRowProps = {
 
 export function MenuItemRow({ item }: MenuItemRowProps) {
   return (
-    <li className="py-3.5" data-testid={`menu-item-${item.id}`}>
-      <article className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1">
+    <li className="py-3" data-testid={`menu-item-${item.id}`}>
+      <article className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5">
         <h3 className="min-w-0 text-[clamp(1.35rem,5.5vw,1.65rem)] leading-[0.98] text-text-primary">
           {item.name}
         </h3>
@@ -15,7 +15,9 @@ export function MenuItemRow({ item }: MenuItemRowProps) {
           {item.price}
         </p>
         {item.description ? (
-          <p className="col-span-2 text-[0.86rem] leading-6 text-text-secondary">{item.description}</p>
+          <p className="col-span-2 text-[0.84rem] leading-[1.45] text-text-secondary" data-testid="item-description">
+            {item.description}
+          </p>
         ) : null}
       </article>
     </li>

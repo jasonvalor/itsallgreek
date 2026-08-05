@@ -129,6 +129,7 @@ test.describe("mobile menu catalog interaction", () => {
     await expect(page.getByTestId("active-category-title")).toHaveText("Pita's");
     await expect(page.getByTestId("category-menu-list").locator("[data-testid^='menu-item-']")).toHaveCount(9);
     await expect(page.getByTestId("menu-item-pitas-gyros")).toContainText("Gyros");
+    await expect(page.getByTestId("menu-item-pitas-gyros").getByTestId("item-description")).toHaveCount(1);
     await expect(page.getByTestId("menu-item-pitas-gyros")).toContainText("€ 10,50");
     await expect(page.getByTestId("category-menu-list").locator("img")).toHaveCount(0);
 
@@ -139,6 +140,7 @@ test.describe("mobile menu catalog interaction", () => {
     await expect(page.getByTestId("menu-item-dessert-bougatsa")).toContainText(
       "Filodeeg gevuld met vanille custard, bestrooid met poedersuiker en kaneel",
     );
+    await expect(page.getByTestId("menu-item-dessert-cheesecake").getByTestId("item-description")).toHaveCount(0);
     await expect(page.getByTestId("category-menu-list").locator("img")).toHaveCount(0);
 
     await page.getByRole("button", { name: "Alcoholische dranken" }).click();
@@ -170,6 +172,44 @@ test.describe("mobile menu catalog interaction", () => {
         await expect(page.getByTestId("popular-menu-image")).toHaveCount(4);
       } else {
         await expect(page.getByTestId("category-menu-list").locator("img")).toHaveCount(0);
+      }
+    }
+  });
+
+  test("renders only active category content and lets short categories stay short", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "mobile menu catalog assertions only apply below the desktop breakpoint");
+
+    await page.goto("/menu");
+
+    await page.getByRole("button", { name: "Pita's" }).click();
+    const pitasHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    await expect(page.getByTestId("menu-item-pitas-gyros")).toBeVisible();
+    await expect(page.getByTestId("menu-item-dessert-cheesecake")).toHaveCount(0);
+
+    await page.getByRole("button", { name: "Dessert" }).click();
+    const dessertHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    await expect(page.getByTestId("menu-item-dessert-cheesecake")).toBeVisible();
+    await expect(page.getByTestId("menu-item-pitas-gyros")).toHaveCount(0);
+
+    expect(dessertHeight, "shorter active categories should not retain the previous taller panel height").toBeLessThan(
+      pitasHeight - 100,
+    );
+  });
+
+  test("keeps every menu name and price visible after category switches", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "mobile menu catalog assertions only apply below the desktop breakpoint");
+
+    await page.goto("/menu");
+
+    for (const category of menuCategories) {
+      await page.getByRole("button", { name: category.buttonLabel ?? category.label }).click();
+
+      for (const item of category.items) {
+        const row = page.getByTestId(`menu-item-${item.id}`);
+
+        await expect(row).toBeVisible();
+        await expect(row).toContainText(item.name);
+        await expect(row).toContainText(item.price);
       }
     }
   });

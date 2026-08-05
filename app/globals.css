@@ -244,6 +244,11 @@ img {
     0 1rem 2.5rem rgb(0 0 0 / 0.32);
 }
 
+.mobile-menu-page {
+  min-height: 0;
+  padding-bottom: clamp(1.5rem, 6vw, 2rem);
+}
+
 .mobile-title {
   color: var(--brand-text-primary);
   font-size: clamp(3.25rem, 14.8vw, 4.2rem);
@@ -277,6 +282,10 @@ img {
     border: 1px solid rgb(255 255 255 / 0.12);
     border-radius: 1.35rem;
     padding-top: 3rem;
+  }
+
+  .mobile-menu-page {
+    padding-bottom: 3rem;
   }
 }
 
