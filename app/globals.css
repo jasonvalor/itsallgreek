@@ -249,6 +249,11 @@ img {
   padding-bottom: clamp(1.5rem, 6vw, 2rem);
 }
 
+.mobile-contact-page {
+  min-height: 0;
+  padding-bottom: clamp(1.75rem, 7vw, 2.5rem);
+}
+
 .mobile-title {
   color: var(--brand-text-primary);
   font-size: clamp(3.25rem, 14.8vw, 4.2rem);
@@ -285,6 +290,10 @@ img {
   }
 
   .mobile-menu-page {
+    padding-bottom: 3rem;
+  }
+
+  .mobile-contact-page {
     padding-bottom: 3rem;
   }
 }

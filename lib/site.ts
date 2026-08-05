@@ -18,9 +18,15 @@ export const siteConfig = {
   onlineOrderHref: null as string | null,
 };
 
+const googleMapsQuery = `${siteConfig.name} ${siteConfig.address} ${siteConfig.location}`;
+
 export const mapSearchHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  `${siteConfig.name} ${siteConfig.address} ${siteConfig.location}`,
+  googleMapsQuery,
 )}`;
+
+export const googleMapsEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
+  googleMapsQuery,
+)}&output=embed`;
 
 export const navigationItems: readonly NavigationItem[] = [
   { href: "/", label: "Home" },
