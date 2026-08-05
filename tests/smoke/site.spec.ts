@@ -366,7 +366,8 @@ test.describe("mobile approved design structure", () => {
     const health = await watchPageHealth(page);
 
     await page.goto("/menu");
-    await expect(page.getByTestId("mobile-menu-page").getByRole("heading", { name: /Gyros Pita/i })).toBeVisible();
+    await expect(page.getByTestId("mobile-menu-page").getByRole("heading", { name: /Populair/i })).toBeVisible();
+    await expect(page.getByTestId("mobile-menu-page").getByTestId("popular-menu-card")).toHaveCount(4);
     await expect(page.getByTestId("mobile-menu-page").getByRole("link", { name: /Bestel nu/i })).toBeVisible();
 
     await page.goto("/about");

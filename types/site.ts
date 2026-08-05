@@ -30,16 +30,17 @@ export type NavigationItem = {
 };
 
 export type MenuItem = {
+  id: string;
+  categoryId: string;
   name: string;
-  description: string | null;
+  description?: string;
   price: string;
-  image: ImageAsset;
 };
 
 export type MenuCategory = {
   id: string;
   label: string;
-  note?: string;
+  buttonLabel?: string;
   items: MenuItem[];
 };
 
