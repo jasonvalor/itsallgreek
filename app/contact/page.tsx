@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import { mapSearchHref, openingHours, siteConfig } from "@/lib/site";
+import { googleMapsEmbedUrl, mapSearchHref, openingHours, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="flex-1" id="main-content">
-      <section className="mobile-approved-page flex flex-col" data-testid="mobile-contact-page">
+      <section className="mobile-approved-page mobile-contact-page flex flex-col" data-testid="mobile-contact-page">
         <div>
           <h1 className="mobile-title">CONTACT</h1>
           <div className="mobile-accent-line mt-7" />
@@ -90,29 +90,29 @@ export default function ContactPage() {
           </dl>
         </section>
 
-        <a
-          aria-label={`Route naar ${siteConfig.name}`}
-          className="mobile-surface relative mt-10 block h-[12rem] overflow-hidden bg-[#111315]"
-          href={mapSearchHref}
-          rel="noreferrer"
-          target="_blank"
-        >
-          <span className="absolute inset-0 opacity-65">
-            <span className="absolute left-[-6%] top-[18%] h-px w-[115%] rotate-[-13deg] bg-border-subtle" />
-            <span className="absolute left-[-8%] top-[46%] h-px w-[116%] rotate-[7deg] bg-border-subtle" />
-            <span className="absolute left-[-5%] top-[72%] h-px w-[110%] rotate-[-8deg] bg-border-subtle" />
-            <span className="absolute left-[16%] top-[-10%] h-[120%] w-px rotate-[16deg] bg-border-subtle" />
-            <span className="absolute left-[41%] top-[-10%] h-[120%] w-px rotate-[-10deg] bg-border-subtle" />
-            <span className="absolute right-[20%] top-[-10%] h-[120%] w-px rotate-[12deg] bg-border-subtle" />
-            <span className="absolute left-[66%] top-0 h-full w-1 rounded-full bg-brand-blue/28" />
-          </span>
-          <span className="absolute inset-0 bg-[radial-gradient(circle_at_52%_48%,rgb(13_115_200_/_0.22),transparent_31%)]" />
-          <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-brand-blue">
-            <Icon className="h-14 w-14" name="mapPin" strokeWidth={2.1} />
-          </span>
-        </a>
+        <div className="mt-10">
+          <div className="mobile-surface overflow-hidden bg-[#111315]" data-testid="contact-map">
+            <iframe
+              allowFullScreen
+              className="block h-[14.5rem] w-full border-0 md:h-[18rem]"
+              data-testid="contact-map-iframe"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              src={googleMapsEmbedUrl}
+              title="Locatie van It's All Greek op Google Maps"
+            />
+          </div>
+          <a
+            className="mt-3 inline-flex text-[0.78rem] font-bold uppercase tracking-normal text-brand-blue underline decoration-brand-blue/55 underline-offset-4 hover:text-brand-blue-hover"
+            href={mapSearchHref}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Open in Google Maps
+          </a>
+        </div>
 
-        <div className="mt-auto pt-10">
+        <div className="pt-8">
           <Button
             className="h-[3.8rem] w-full border-2 border-brand-blue bg-transparent"
             href={siteConfig.phoneHref}
