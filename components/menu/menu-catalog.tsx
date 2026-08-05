@@ -38,11 +38,11 @@ export function MenuCatalog({ categories, popularItems }: MenuCatalogProps) {
   }, [activeFilterId]);
 
   return (
-    <section aria-labelledby="active-menu-heading" className="mt-8">
+    <section aria-labelledby="active-menu-heading" className="mt-6">
       <div className="-mx-[var(--mobile-page-x)] overflow-hidden">
         <div
           aria-label="Menu categorieen"
-          className="flex gap-2 overflow-x-auto overscroll-x-contain px-[var(--mobile-page-x)] pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-2 overflow-x-auto overscroll-x-contain px-[var(--mobile-page-x)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           data-testid="menu-category-scroller"
           role="group"
         >
@@ -52,6 +52,7 @@ export function MenuCatalog({ categories, popularItems }: MenuCatalogProps) {
             return (
               <button
                 aria-pressed={isActive}
+                aria-controls="active-menu-panel"
                 className={`inline-flex min-h-11 shrink-0 items-center rounded-[var(--radius-full)] border px-4 pt-1.5 pb-1 font-display text-[1.05rem] uppercase leading-none transition-colors ${
                   isActive
                     ? "border-brand-blue bg-brand-blue text-text-primary shadow-[0_0.75rem_1.5rem_rgb(13_115_200_/_0.22)]"
@@ -72,7 +73,7 @@ export function MenuCatalog({ categories, popularItems }: MenuCatalogProps) {
       </div>
 
       <h2
-        className="mt-7 text-[clamp(2rem,8.4vw,2.5rem)] leading-none text-text-primary"
+        className="mt-5 text-[clamp(1.9rem,8vw,2.35rem)] leading-none text-text-primary"
         data-testid="active-category-title"
         id="active-menu-heading"
       >
@@ -80,13 +81,13 @@ export function MenuCatalog({ categories, popularItems }: MenuCatalogProps) {
       </h2>
 
       {activeFilterId === POPULAR_MENU_FILTER_ID ? (
-        <div className="mt-5 grid gap-4" data-testid="popular-menu-list">
+        <div className="mt-4 grid gap-3.5" data-testid="popular-menu-list" id="active-menu-panel">
           {popularItems.map((entry, index) => (
             <PopularMenuCard entry={entry} key={entry.id} priority={index < 2} />
           ))}
         </div>
       ) : (
-        <ul className="mt-4 divide-y divide-border-subtle" data-testid="category-menu-list">
+        <ul className="mt-3 divide-y divide-border-subtle" data-testid="category-menu-list" id="active-menu-panel">
           {activeCategory?.items.map((item) => <MenuItemRow item={item} key={item.id} />)}
         </ul>
       )}

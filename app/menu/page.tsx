@@ -16,15 +16,15 @@ export const metadata: Metadata = {
 export default function MenuPage() {
   return (
     <main className="flex-1" id="main-content">
-      <section className="mobile-approved-page flex flex-col" data-testid="mobile-menu-page">
+      <section className="mobile-approved-page mobile-menu-page flex flex-col" data-testid="mobile-menu-page">
         <div>
           <h1 className="mobile-title">ONS MENU</h1>
-          <div className="mobile-accent-line mt-7" />
+          <div className="mobile-accent-line mt-6" />
         </div>
 
         <MenuCatalog categories={menuCategories} popularItems={popularMenuItems} />
 
-        <div className="mt-auto pt-12">
+        <div className="pt-8">
           <Button className="h-[3.8rem] w-full border-2 border-brand-blue bg-transparent" href="/order" variant="secondary">
             Bestel nu
           </Button>
