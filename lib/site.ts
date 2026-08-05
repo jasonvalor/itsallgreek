@@ -1,7 +1,6 @@
 import type {
   ContactItem,
   Feature,
-  MenuCategory,
   NavigationItem,
   OpeningHour,
   OrderBenefit,
@@ -123,60 +122,3 @@ export const contactItems: ContactItem[] = [
     icon: "mail",
   },
 ];
-
-export const menuCategories: MenuCategory[] = [
-  {
-    id: "selectie",
-    label: "Beschikbare selectie",
-    note:
-      "Een korte selectie van beschikbare gerechten. Neem contact op voor de meest actuele volledige menukaart.",
-    items: [
-      {
-        name: "Gyros Pita",
-        description: null,
-        price: "€ 8,00",
-        image: {
-          src: "/images/menu-gyros.png",
-          alt: "Gyros pita met tzatziki",
-          width: 627,
-          height: 627,
-        },
-      },
-      {
-        name: "Souvlaki Kip",
-        description: null,
-        price: "€ 15,00",
-        image: {
-          src: "/images/menu-souvlaki.png",
-          alt: "Kip souvlaki spiesjes",
-          width: 627,
-          height: 627,
-        },
-      },
-      {
-        name: "Mixed Grill",
-        description: null,
-        price: "€ 20,00",
-        image: {
-          src: "/images/menu-mixed-grill.png",
-          alt: "Mixed grill schotel",
-          width: 627,
-          height: 627,
-        },
-      },
-      {
-        name: "Griekse Salade",
-        description: null,
-        price: "€ 9,00",
-        image: {
-          src: "/images/menu-salad.png",
-          alt: "Griekse salade met feta",
-          width: 627,
-          height: 627,
-        },
-      },
-    ],
-  },
-];
-
-export const menuItems = menuCategories.flatMap((category) => category.items);
